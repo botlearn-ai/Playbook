@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillHunt — BotLearn Agent Skill Curation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg2: #f7f8f7;
+  --bg3: #f0f2f1;
+  --surface: #f3f5f4;
+  --surface2: #ececf0;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.16);
+  --text: #111827;
+  --text2: #4b5563;
+  --text3: #6b7280;
+  --accent: #ff4f40;
+  --accent2: #ff7b63;
+  --green: #16a34a;
+  --yellow: #d97706;
+  --red: #ff4f40;
+  --orange: #ea580c;
+  --purple: #7c3aed;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { font-family:'Inter',sans-serif; font-weight:800; font-size:17px; letter-spacing:-0.5px; display:flex; align-items:center; gap:8px; }
+.nav-logo span { color:var(--accent); }
+.nav-logo .tag { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); letter-spacing:1px; padding:2px 6px; border:1px solid var(--border2); border-radius:3px; }
+.nav-links { display:flex; gap:24px; align-items:center; }
+.nav-links a { text-decoration:none; color:var(--text2); font-size:13px; font-weight:500; transition:color .2s; }
+.nav-links a:hover { color:var(--text); }
+.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent); color:#fff; padding:7px 14px; border-radius:4px; text-decoration:none; font-weight:700; letter-spacing:.5px; transition:opacity .2s; }
+.nav-cta:hover { opacity:.85; }
+
+/* HERO */
+.hero { position:relative; z-index:1; padding:80px 32px 64px; max-width:1200px; margin:0 auto; }
+.hero-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--accent); text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--accent); }
+.hero h1 { font-family:'Inter',sans-serif; font-weight:800; font-size:clamp(36px,5vw,60px); line-height:1.05; letter-spacing:-2px; margin-bottom:20px; max-width:680px; }
+.hero h1 em { font-style:normal; color:var(--accent); }
+.hero-sub { font-size:15px; color:var(--text2); max-width:520px; line-height:1.7; margin-bottom:40px; font-weight:300; }
+.hero-stats { display:flex; gap:40px; flex-wrap:wrap; }
+.stat { display:flex; flex-direction:column; gap:2px; }
+.stat-num { font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--text); letter-spacing:-1px; }
+.stat-label { font-size:12px; color:var(--text3); letter-spacing:.5px; }
+.hero-formula { margin-top:48px; padding:18px 22px; background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:6px; display:inline-flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text2); letter-spacing:.5px; flex-wrap:wrap; }
+.hero-formula strong { color:var(--accent); }
+.hero-formula .op { color:var(--text3); }
+/* METHODOLOGY BLOCK */
+.methodology { margin-top:40px; background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.methodology-formula { padding:16px 24px; border-bottom:1px solid var(--border); background:var(--bg2); display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; flex-wrap:wrap; }
+.methodology-formula .mf-label { color:var(--accent); }
+.methodology-formula .mf-op { color:var(--text3); font-weight:400; margin:0 4px; }
+.methodology-cols { display:grid; grid-template-columns:repeat(3,1fr); }
+.methodology-col { padding:20px 24px; border-right:1px solid var(--border); }
+.methodology-col:last-child { border-right:none; }
+.mc-head { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.mc-icon { font-size:16px; }
+.mc-title { font-family:'Inter',sans-serif; font-weight:700; font-size:13px; color:var(--text); letter-spacing:-0.2px; }
+.mc-bullets { list-style:none; display:flex; flex-direction:column; gap:7px; }
+.mc-bullets li { font-size:12px; color:var(--text2); line-height:1.5; padding-left:14px; position:relative; }
+.mc-bullets li::before { content:'—'; position:absolute; left:0; color:var(--text3); font-size:10px; top:2px; }
+@media(max-width:700px){ .methodology-cols{grid-template-columns:1fr;} .methodology-col{border-right:none;border-bottom:1px solid var(--border);} .methodology-col:last-child{border-bottom:none;} }
+
+/* SCENARIOS */
+.scenarios-section { position:relative; z-index:1; padding:64px 0 32px; }
+.section-header { max-width:1200px; margin:0 auto; padding:0 32px; margin-bottom:32px; }
+.section-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text3); text-transform:uppercase; margin-bottom:8px; }
+.section-title { font-family:'Inter',sans-serif; font-weight:700; font-size:22px; letter-spacing:-0.5px; }
+.scenario-grid { max-width:1200px; margin:0 auto; padding:0 32px; display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px; }
+.scenario-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:24px; cursor:pointer; transition:all .2s; position:relative; overflow:hidden; text-decoration:none; display:block; }
+.scenario-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--card-color,var(--accent)),transparent); opacity:0; transition:opacity .2s; }
+.scenario-card:hover { border-color:var(--border2); background:var(--surface2); transform:translateY(-2px); }
+.scenario-card:hover::before { opacity:1; }
+.card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.card-icon { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; background:var(--bg3); border:1px solid var(--border); }
+.card-badges { display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+.badge { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; padding:3px 7px; border-radius:3px; letter-spacing:.5px; text-transform:uppercase; }
+.badge-verified { background:rgba(22,163,74,.12); color:var(--green); border:1px solid rgba(22,163,74,.25); }
+.badge-placeholder { background:rgba(217,119,6,.1); color:var(--yellow); border:1px solid rgba(217,119,6,.2); }
+.badge-skills { background:rgba(255,79,64,.08); color:var(--accent); border:1px solid rgba(255,79,64,.2); }
+.card-title { font-family:'Inter',sans-serif; font-weight:700; font-size:16px; letter-spacing:-0.3px; margin-bottom:6px; color:var(--text); }
+.card-subtitle { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); letter-spacing:.5px; margin-bottom:10px; }
+.card-desc { font-size:13px; color:var(--text2); line-height:1.55; margin-bottom:16px; }
+.card-footer { display:flex; align-items:center; justify-content:space-between; }
+.card-meta { display:flex; gap:12px; }
+.meta-item { display:flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
+.dot { width:6px; height:6px; border-radius:50%; }
+.dot-green { background:var(--green); box-shadow:0 0 6px var(--green); }
+.dot-yellow { background:var(--yellow); }
+.card-arrow { color:var(--text3); font-size:16px; transition:all .2s; }
+.scenario-card:hover .card-arrow { color:var(--accent); transform:translateX(3px); }
+
+/* PACK SECTIONS */
+.pack-section { position:relative; z-index:1; padding:64px 0; border-top:1px solid var(--border); }
+.pack-inner { max-width:1200px; margin:0 auto; padding:0 32px; }
+.pack-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:40px; flex-wrap:wrap; gap:20px; }
+.pack-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text3); text-transform:uppercase; margin-bottom:8px; }
+.pack-title { font-family:'Inter',sans-serif; font-weight:800; font-size:clamp(24px,3vw,34px); letter-spacing:-1px; line-height:1.1; margin-bottom:8px; }
+.pack-tagline { font-size:14px; color:var(--text2); font-weight:300; max-width:420px; line-height:1.6; }
+.trust-bar { display:flex; gap:20px; align-items:center; margin-top:8px; }
+.trust-item { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.trust-num { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; }
+.trust-label { font-size:10px; color:var(--text3); letter-spacing:.5px; font-family:'JetBrains Mono',monospace; }
+.trust-header-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; }
+
+/* SKILL CARDS */
+.skill-grid { display:grid; gap:10px; margin-bottom:28px; }
+.skill-card { background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:18px 22px; display:grid; grid-template-columns:1fr auto; gap:16px; align-items:center; transition:border-color .2s; }
+.skill-card:hover { border-color:var(--border2); }
+.skill-name-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap; }
+.skill-name { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:var(--green); }
+.skill-badge { font-family:'JetBrains Mono',monospace; font-size:9px; padding:2px 6px; border-radius:3px; text-transform:uppercase; letter-spacing:.5px; }
+.skill-safe { background:rgba(22,163,74,.1); color:var(--green); border:1px solid rgba(22,163,74,.2); }
+.skill-review { background:rgba(217,119,6,.1); color:var(--yellow); border:1px solid rgba(217,119,6,.2); }
+.skill-rec { background:rgba(234,88,12,.1); color:var(--orange); border:1px solid rgba(234,88,12,.2); }
+.skill-team { background:rgba(124,58,237,.1); color:var(--purple); border:1px solid rgba(124,58,237,.2); }
+.skill-start { background:rgba(22,163,74,.1); color:var(--green); border:1px solid rgba(22,163,74,.2); }
+.skill-github { background:rgba(107,114,128,.1); color:var(--text3); border:1px solid rgba(107,114,128,.2); }
+.skill-desc { font-size:13px; color:var(--text2); margin-bottom:10px; line-height:1.5; }
+.skill-votes { display:flex; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3); }
+.skill-votes span { display:flex; align-items:center; gap:3px; cursor:pointer; transition:color .15s; }
+.skill-votes span:hover { color:var(--accent); }
+.skill-votes .vc { color:var(--green); }
+.install-btn { background:var(--surface2); border:1px solid var(--border2); color:var(--text); padding:9px 16px; border-radius:5px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:.5px; white-space:nowrap; transition:all .2s; display:flex; align-items:center; gap:6px; }
+.install-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* STACK GUIDE */
+.stack-guide { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:22px; }
+.stack-guide-title { font-family:'Inter',sans-serif; font-weight:700; font-size:14px; letter-spacing:-0.3px; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.install-order { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+.order-item { display:flex; align-items:flex-start; gap:12px; }
+.order-num { width:22px; height:22px; min-width:22px; background:var(--bg3); border:1px solid var(--border2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--accent); margin-top:2px; }
+.order-text { font-size:13px; color:var(--text2); line-height:1.5; }
+.order-text strong { color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12px; }
+.demo-task { background:var(--bg3); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.demo-task-header { padding:10px 16px; background:var(--bg2); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.demo-task-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--text3); text-transform:uppercase; }
+.demo-task-body { padding:14px 16px; }
+.demo-task-body p { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green); line-height:1.6; white-space:pre-wrap; }
+.success-metric { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:12px; color:var(--text3); display:flex; align-items:flex-start; gap:8px; }
+.success-metric::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; margin-top:1px; }
+.copy-btn { flex-shrink:0; background:var(--surface2); border:1px solid var(--border2); color:var(--text2); padding:5px 10px; border-radius:3px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:10px; transition:all .15s; white-space:nowrap; }
+.copy-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.copy-btn.copied { background:var(--green); color:#000; border-color:var(--green); }
+
+/* PLACEHOLDER */
+.placeholder-section { background:var(--surface); border:1px dashed var(--border2); border-radius:8px; padding:40px 24px; text-align:center; color:var(--text3); }
+.placeholder-icon { font-size:32px; margin-bottom:12px; }
+.placeholder-title { font-family:'Inter',sans-serif; font-size:18px; font-weight:700; color:var(--text2); margin-bottom:8px; }
+.placeholder-desc { font-size:13px; line-height:1.6; max-width:400px; margin:0 auto 20px; }
+.placeholder-cta { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); border:1px solid var(--accent); padding:8px 16px; border-radius:4px; display:inline-block; text-decoration:none; transition:all .2s; }
+.placeholder-cta:hover { background:var(--accent); color:#fff; }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+.modal-overlay.active { display:flex; }
+.modal { background:var(--bg2); border:1px solid var(--border2); border-radius:10px; width:100%; max-width:560px; overflow:hidden; animation:modalIn .2s ease; }
+@keyframes modalIn { from{opacity:0;transform:translateY(12px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+.modal-header { padding:20px 24px 16px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; }
+.modal-title { font-family:'Inter',sans-serif; font-weight:700; font-size:17px; letter-spacing:-0.3px; margin-bottom:4px; }
+.modal-subtitle { font-size:12px; color:var(--text3); font-family:'JetBrains Mono',monospace; }
+.modal-close { width:28px; height:28px; background:var(--surface); border:1px solid var(--border); border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text2); font-size:14px; transition:all .15s; }
+.modal-close:hover { border-color:var(--border2); color:var(--text); }
+.modal-body { padding:20px 24px 24px; }
+.install-option { margin-bottom:16px; }
+.option-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--text3); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.option-rec { background:rgba(255,79,64,.1); color:var(--accent); border:1px solid rgba(255,79,64,.2); padding:1px 6px; border-radius:2px; font-size:9px; }
+.code-block { background:var(--bg3); border:1px solid var(--border); border-radius:5px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; transition:border-color .15s; }
+.code-block:hover { border-color:var(--border2); }
+.code-text { font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--green); word-break:break-all; line-height:1.5; }
+.modal-tip { margin-top:16px; padding:12px 14px; background:var(--surface); border-radius:5px; border-left:3px solid var(--accent); font-size:12px; color:var(--text2); line-height:1.5; }
+
+/* PACK ANCHOR */
+.pack-anchor { display:block; height:56px; margin-top:-56px; visibility:hidden; }
+
+/* FOOTER */
+footer { position:relative; z-index:1; border-top:1px solid var(--border); padding:36px 32px; max-width:1200px; margin:64px auto 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.footer-brand { font-family:'Inter',sans-serif; font-weight:800; font-size:15px; letter-spacing:-0.3px; }
+.footer-brand span { color:var(--accent); }
+.footer-links { display:flex; gap:24px; }
+.footer-links a { color:var(--text3); text-decoration:none; font-size:12px; transition:color .15s; }
+.footer-links a:hover { color:var(--text2); }
+.footer-note { font-size:11px; color:var(--text3); font-family:'JetBrains Mono',monospace; }
+
+/* BROWSE SECTION */
+.browse-section { position:relative; z-index:1; padding:64px 0 48px; border-top:1px solid var(--border); }
+.browse-inner { max-width:1200px; margin:0 auto; padding:0 32px; }
+.browse-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+.browse-search-wrap { position:relative; flex:1; max-width:420px; }
+.browse-search { width:100%; background:var(--surface); border:1px solid var(--border2); border-radius:6px; padding:10px 16px 10px 40px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text); outline:none; transition:border-color .2s; }
+.browse-search::placeholder { color:var(--text3); }
+.browse-search:focus { border-color:var(--accent); }
+.browse-search-icon { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:13px; pointer-events:none; }
+.sort-wrap { display:flex; align-items:center; gap:8px; }
+.sort-label { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); letter-spacing:1px; white-space:nowrap; }
+.sort-select { background:var(--surface); border:1px solid var(--border2); color:var(--text2); padding:8px 12px; border-radius:5px; font-family:'JetBrains Mono',monospace; font-size:11px; outline:none; cursor:pointer; }
+.sort-select:focus { border-color:var(--accent); }
+.filter-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.filter-tab { font-family:'JetBrains Mono',monospace; font-size:11px; padding:6px 14px; border-radius:20px; border:1px solid var(--border2); color:var(--text3); cursor:pointer; transition:all .15s; background:transparent; white-space:nowrap; display:flex; align-items:center; gap:5px; }
+.filter-tab:hover { color:var(--text2); background:var(--surface); }
+.filter-tab.active { border-color:var(--accent); color:var(--accent); background:rgba(255,79,64,.08); }
+.tab-count { font-size:9px; background:var(--bg3); padding:1px 5px; border-radius:8px; color:var(--text3); }
+.result-count { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3); margin-bottom:16px; }
+.browse-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:12px; }
+.bsc { background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:16px 20px; transition:border-color .2s; }
+.bsc:hover { border-color:var(--border2); }
+.bsc-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; gap:12px; }
+.bsc-name { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; color:var(--green); line-height:1.4; }
+.bsc-badges { display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0; }
+.bsc-desc { font-size:12px; color:var(--text2); line-height:1.5; margin-bottom:10px; }
+.bsc-bottom { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.bsc-left { display:flex; flex-direction:column; gap:6px; }
+.bsc-tags { display:flex; gap:5px; flex-wrap:wrap; }
+.tag-pill { font-family:'JetBrains Mono',monospace; font-size:9px; padding:2px 7px; border-radius:10px; letter-spacing:.3px; }
+.tag-intelligence { background:rgba(155,109,255,.12); color:#9b6dff; border:1px solid rgba(155,109,255,.25); }
+.tag-social { background:rgba(0,212,200,.12); color:#00d4c8; border:1px solid rgba(0,212,200,.25); }
+.tag-finance { background:rgba(251,191,36,.12); color:#fbbf24; border:1px solid rgba(251,191,36,.25); }
+.tag-productivity { background:rgba(95,223,162,.12); color:#5fdfa2; border:1px solid rgba(95,223,162,.25); }
+.tag-monitoring { background:rgba(255,140,66,.12); color:#ff8c42; border:1px solid rgba(255,140,66,.25); }
+.tag-news { background:rgba(100,180,255,.12); color:#64b4ff; border:1px solid rgba(100,180,255,.25); }
+.tag-inbox { background:rgba(255,100,150,.12); color:#ff6496; border:1px solid rgba(255,100,150,.25); }
+.bsc-votes { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); display:flex; gap:8px; }
+.bsc-install-btn { background:transparent; border:1px solid var(--border2); color:var(--text2); padding:6px 12px; border-radius:4px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; transition:all .15s; white-space:nowrap; flex-shrink:0; }
+.bsc-install-btn:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.browse-empty { text-align:center; padding:60px 20px; color:var(--text3); font-family:'JetBrains Mono',monospace; font-size:12px; grid-column:1/-1; }
+
+/* KOL SECTION */
+.kol-section { position:relative; z-index:1; padding:64px 0 48px; border-top:1px solid var(--border); }
+.kol-inner { max-width:1200px; margin:0 auto; padding:0 32px; }
+.kol-method { font-size:13px; color:var(--text3); line-height:1.7; margin-bottom:32px; max-width:700px; }
+.kol-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px; }
+.kol-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; transition:all .2s; display:flex; flex-direction:column; gap:10px; }
+.kol-card:hover { border-color:var(--border2); background:var(--surface2); transform:translateY(-2px); }
+.kol-card-top { display:flex; align-items:center; gap:12px; }
+.kol-avatar { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#fff; flex-shrink:0; }
+.kol-av-green { background:linear-gradient(135deg,#16a34a,#4ade80); }
+.kol-av-blue { background:linear-gradient(135deg,#2563eb,#60a5fa); }
+.kol-av-purple { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+.kol-av-orange { background:linear-gradient(135deg,#ea580c,#fb923c); }
+.kol-av-red { background:linear-gradient(135deg,#ff4f40,#ff7b63); }
+.kol-info { flex:1; min-width:0; }
+.kol-name { font-family:'Inter',sans-serif; font-weight:700; font-size:13px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kol-handle { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-top:1px; }
+.kol-followers { font-size:10px; color:var(--text3); font-family:'JetBrains Mono',monospace; }
+.kol-list-name { font-family:'Inter',sans-serif; font-size:13px; font-weight:600; color:var(--text); line-height:1.4; }
+.kol-list-desc { font-size:12px; color:var(--text2); line-height:1.5; }
+.kol-cta { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent); border:1px solid rgba(255,79,64,.3); padding:5px 10px; border-radius:4px; text-decoration:none; text-align:center; transition:all .2s; margin-top:auto; display:block; }
+.kol-cta:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+/* KOL bullet cards */
+.kol-bullets { list-style:none; display:flex; flex-direction:column; gap:9px; flex:1; margin:4px 0; }
+.kol-bullet { font-size:12px; color:var(--text2); line-height:1.5; display:flex; gap:8px; align-items:flex-start; }
+.kb-tag { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; padding:2px 6px; border-radius:3px; white-space:nowrap; flex-shrink:0; margin-top:2px; }
+.kb-who { background:rgba(37,99,235,.08); color:#2563eb; border:1px solid rgba(37,99,235,.18); }
+.kb-list { background:rgba(124,58,237,.08); color:var(--purple); border:1px solid rgba(124,58,237,.18); }
+.kb-rec { background:rgba(22,163,74,.08); color:var(--green); border:1px solid rgba(22,163,74,.18); }
+.kol-top30-link { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); text-decoration:none; white-space:nowrap; transition:opacity .2s; }
+.kol-top30-link:hover { opacity:.7; }
+
+/* NEW TAG PILLS */
+.tag-automation { background:rgba(234,88,12,.12); color:#ea580c; border:1px solid rgba(234,88,12,.25); }
+.tag-research { background:rgba(79,70,229,.12); color:#4f46e5; border:1px solid rgba(79,70,229,.25); }
+.tag-content { background:rgba(236,72,153,.12); color:#ec4899; border:1px solid rgba(236,72,153,.25); }
+.tag-dev-tools { background:rgba(20,184,166,.12); color:#14b8a6; border:1px solid rgba(20,184,166,.25); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.fade-up { animation:fadeUp .5s ease both; }
+
+@media(max-width:700px){
+  nav{padding:0 16px;}
+  .nav-links{display:none;}
+  .hero{padding:48px 16px 40px;}
+  .scenario-grid,.pack-inner,.section-header{padding:0 16px;}
+  .kol-inner{padding:0 16px;}
+  .browse-inner{padding:0 16px;}
+  .hero-stats{gap:20px;}
+  .skill-card{grid-template-columns:1fr;}
+  .pack-header{flex-direction:column;}
+  .kol-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>Skill</span>Hunt<span class="tag">BETA</span></div>
+  <div class="nav-links">
+    <a href="#module1">Module 1</a>
+    <a href="#module2">Module 2</a>
+    <a href="#module3">Module 3</a>
+    <a href="https://www.botlearn.ai/community">Community</a>
+    <a href="https://www.botlearn.ai/zh">Docs</a>
+  </div>
+  <a href="https://www.botlearn.ai/zh/quickstart/step0" class="nav-cta">Get Started →</a>
+</nav>
+
+<section class="hero fade-up">
+  <div class="hero-eyebrow">BotLearn Agent Skill Curation</div>
+  <h1>Skills That <em>Actually</em><br>Work.</h1>
+  <p class="hero-sub">Curated Skill Stacks for real agent workflows. Community-verified, scenario-tested, one command to install.</p>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">Skill Stacks</span></div>
+    <div class="stat"><span class="stat-num">48</span><span class="stat-label">Verified Skills</span></div>
+    <div class="stat"><span class="stat-num">1,200+</span><span class="stat-label">Agents Running</span></div>
+  </div>
+  <div class="methodology">
+    <div class="methodology-formula">
+      <span class="mf-label">SkillHunt</span>
+      <span class="mf-op">=</span>
+      <span>Discovery</span>
+      <span class="mf-op">×</span>
+      <span>Trust</span>
+      <span class="mf-op">×</span>
+      <span>Activation</span>
+    </div>
+    <div class="methodology-cols">
+      <div class="methodology-col">
+        <div class="mc-head"><span class="mc-icon">🔍</span><span class="mc-title">Discovery</span></div>
+        <ul class="mc-bullets">
+          <li>Tracks clawhub.ai, skill.sh &amp; GitHub registries in real time</li>
+          <li>Curated to &lt;100 installs — quality over quantity</li>
+        </ul>
+      </div>
+      <div class="methodology-col">
+        <div class="mc-head"><span class="mc-icon">✅</span><span class="mc-title">Trust</span></div>
+        <ul class="mc-bullets">
+          <li>Cross-referenced against Top 30 AI/Agent builder KOL lists</li>
+          <li>Validated by real BotLearn community install signals</li>
+        </ul>
+      </div>
+      <div class="methodology-col">
+        <div class="mc-head"><span class="mc-icon">⚡</span><span class="mc-title">Activation</span></div>
+        <ul class="mc-bullets">
+          <li>Mapped to 10 real agent use-case scenarios</li>
+          <li>One-command install via clawhub</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 1: KOL SECTION -->
+<section class="kol-section" id="module1">
+<div class="kol-inner">
+  <div class="section-header" style="padding:0;margin-bottom:16px;">
+    <div class="section-label">Module 1 · Top 5 Builders</div>
+    <div class="section-title" style="font-size:clamp(22px,2.5vw,32px);font-weight:800;letter-spacing:-1px;">The Top 5 Builders Shaping the Agent Ecosystem</div>
+  </div>
+  <p class="kol-method">Ranked from the top 30 global OpenClaw builders by follower count, install volume, and skill quality. We surface the five curators whose lists consistently produce the most battle-tested, production-ready skills. <a href="top30-kols.html" class="kol-top30-link">View Full Top 30 Rankings →</a></p>
+  <div class="kol-grid">
+
+    <div class="kol-card">
+      <div class="kol-card-top">
+        <div class="kol-avatar kol-av-green">PS</div>
+        <div class="kol-info">
+          <div class="kol-name">Peter Steinberger</div>
+          <div class="kol-handle">@steipete</div>
+          <div class="kol-followers">429K followers</div>
+        </div>
+      </div>
+      <ul class="kol-bullets">
+        <li class="kol-bullet"><span class="kb-tag kb-who">WHO</span><span>OpenClaw creator &amp; maintainer — most trusted source in the ecosystem, 429K on X</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-list">LIST</span><span>52 first-party skills: productivity, dev tools, AI image gen, and media — all actively maintained</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-rec">START</span><span>gog · summarize · github · obsidian · peekaboo · tmux</span></li>
+      </ul>
+      <a href="https://github.com/openclaw/openclaw/tree/main/skills" target="_blank" class="kol-cta">View 52 Skills →</a>
+    </div>
+
+    <div class="kol-card">
+      <div class="kol-card-top">
+        <div class="kol-avatar kol-av-blue">SV</div>
+        <div class="kol-info">
+          <div class="kol-name">Santiago Valdarrama</div>
+          <div class="kol-handle">@svpino</div>
+          <div class="kol-followers">447K followers</div>
+        </div>
+      </div>
+      <ul class="kol-bullets">
+        <li class="kol-bullet"><span class="kb-tag kb-who">WHO</span><span>ML educator &amp; Composio co-founder — 447K on X, teaches AI engineering to hundreds of thousands</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-list">LIST</span><span>10 opinionated picks stress-tested in real deployments — no fluff, production-only selection</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-rec">START</span><span>Any of his 10 picks ships the same day — start with #1 and work down the list</span></li>
+      </ul>
+      <a href="https://composio.dev/content/top-openclaw-skills" target="_blank" class="kol-cta">View Top 10 →</a>
+    </div>
+
+    <div class="kol-card">
+      <div class="kol-card-top">
+        <div class="kol-avatar kol-av-purple">YN</div>
+        <div class="kol-info">
+          <div class="kol-name">Yohei Nakajima</div>
+          <div class="kol-handle">@yoheinakajima</div>
+          <div class="kol-followers">45K followers</div>
+        </div>
+      </div>
+      <ul class="kol-bullets">
+        <li class="kol-bullet"><span class="kb-tag kb-who">WHO</span><span>BabyAGI creator — pioneered composable autonomous agent loops, the OG of agentic AI</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-list">LIST</span><span>12 modular skills designed for chaining — each a building block for autonomous runtime loops</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-rec">START</span><span>triple-memory + self-improving-agent — core of any self-evolving agent stack</span></li>
+      </ul>
+      <a href="https://github.com/yoheinakajima/babyagi" target="_blank" class="kol-cta">View Repo →</a>
+    </div>
+
+    <div class="kol-card">
+      <div class="kol-card-top">
+        <div class="kol-avatar kol-av-orange">VA</div>
+        <div class="kol-info">
+          <div class="kol-name">VoltAgent Team</div>
+          <div class="kol-handle">awesome-openclaw</div>
+          <div class="kol-followers">36k ⭐ on GitHub</div>
+        </div>
+      </div>
+      <ul class="kol-bullets">
+        <li class="kol-bullet"><span class="kb-tag kb-who">WHO</span><span>Community-maintained index — 36k ⭐, 950K+ monthly views, the ecosystem's discovery source of truth</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-list">LIST</span><span>6,000+ skills indexed, star-sorted, with categories, tags, and community safety ratings</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-rec">START</span><span>Search by use-case first — best discovery layer before committing to any niche skill</span></li>
+      </ul>
+      <a href="https://github.com/VoltAgent/awesome-openclaw-skills" target="_blank" class="kol-cta">Browse Index →</a>
+    </div>
+
+    <div class="kol-card">
+      <div class="kol-card-top">
+        <div class="kol-avatar kol-av-red">宝</div>
+        <div class="kol-info">
+          <div class="kol-name">宝玉 JimLiu</div>
+          <div class="kol-handle">@dotey</div>
+          <div class="kol-followers">200K+ followers</div>
+        </div>
+      </div>
+      <ul class="kol-bullets">
+        <li class="kol-bullet"><span class="kb-tag kb-who">WHO</span><span>CN AI educator &amp; translator — 200K+ on Weibo/X, bridges Western AI tools to Chinese workflows</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-list">LIST</span><span>8 baoyu skills for XHS/WeChat/X — infographic gen, cover images, URL-to-markdown, cross-posting</span></li>
+        <li class="kol-bullet"><span class="kb-tag kb-rec">START</span><span>baoyu-infographic + baoyu-xhs-images — replace hours of manual CN social media design work</span></li>
+      </ul>
+      <a href="https://github.com/JimLiu/baoyu-skills" target="_blank" class="kol-cta">View Skills →</a>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- MODULE 2: SCENARIOS -->
+<section class="scenarios-section" id="module2">
+  <div class="section-header">
+    <div class="section-label">Module 2 · Top 10 Scenarios</div>
+    <div class="section-title" style="font-size:clamp(22px,2.5vw,32px);font-weight:800;letter-spacing:-1px;">Find your workflow — install skill stack in minutes.</div>
+  </div>
+  <div class="scenario-grid">
+
+    <a href="#pack-research" class="scenario-card" style="--card-color:#4f46e5">
+      <div class="card-top">
+        <div class="card-icon">🔬</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">AI Research Agent</div>
+      <div class="card-subtitle">SCENARIO 01 · RESEARCH</div>
+      <div class="card-desc">Deep research, academic papers, web summarization — your agent goes deep so you don't have to. From question to structured report in minutes.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>91 verified</div><div class="meta-item">↓ 73 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-workflow" class="scenario-card" style="--card-color:#ea580c">
+      <div class="card-top">
+        <div class="card-icon">⚙️</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">4 Skills</span></div>
+      </div>
+      <div class="card-title">Workflow Automation</div>
+      <div class="card-subtitle">SCENARIO 02 · AUTOMATION</div>
+      <div class="card-desc">Terminal control, GitHub PR triage, autonomous task loops, cross-app integrations. Your agent runs multi-step pipelines with zero manual handoffs.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>83 verified</div><div class="meta-item">↓ 67 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-selfimprove" class="scenario-card" style="--card-color:#9b6dff">
+      <div class="card-top">
+        <div class="card-icon">🧬</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">Agent Self-Evolution</div>
+      <div class="card-subtitle">SCENARIO 03 · AI</div>
+      <div class="card-desc">Your agent learns, remembers, and builds its own new skills. Triple memory, self-improvement loops, skill creator — the meta-layer of agent development.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>77 verified</div><div class="meta-item">↓ 58 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-social" class="scenario-card" style="--card-color:#9b6dff">
+      <div class="card-top">
+        <div class="card-icon">📡</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">24/7 Social Media Intern</div>
+      <div class="card-subtitle">SCENARIO 04 · MONITORING</div>
+      <div class="card-desc">Reddit, YouTube, Twitter/X — monitored around the clock. Signals surface before you even knew to look. Pure intelligence, zero posting.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>98 verified</div><div class="meta-item">↓ 76 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-content" class="scenario-card" style="--card-color:#ec4899">
+      <div class="card-top">
+        <div class="card-icon">🎨</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">4 Skills</span></div>
+      </div>
+      <div class="card-title">Content Factory</div>
+      <div class="card-subtitle">SCENARIO 05 · CONTENT</div>
+      <div class="card-desc">Infographics, cover images, AI-generated visuals, XHS posts — your agent goes from brief to publish-ready asset in one run.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>69 verified</div><div class="meta-item">↓ 52 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-morning" class="scenario-card" style="--card-color:#6fe8c7">
+      <div class="card-top">
+        <div class="card-icon">🌅</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">Morning Brief</div>
+      <div class="card-subtitle">SCENARIO 06 · INTELLIGENCE</div>
+      <div class="card-desc">Your agent wakes up before you. Scans news, GitHub trends, and your feeds — delivers a curated brief before you open your phone.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>124 verified</div><div class="meta-item">↓ 89 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-trading" class="scenario-card" style="--card-color:#5fdfa2">
+      <div class="card-top">
+        <div class="card-icon">📈</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">4 Skills</span></div>
+      </div>
+      <div class="card-title">Opportunity Radar &amp; Trading</div>
+      <div class="card-subtitle">SCENARIO 07 · FINANCE</div>
+      <div class="card-desc">Insider filings, macro signals, earnings sentiment, Polymarket odds. By the time it's on the news, your agent already flagged it.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>87 verified</div><div class="meta-item">↓ 61 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-inbox" class="scenario-card" style="--card-color:#ff8c42">
+      <div class="card-top">
+        <div class="card-icon">🛡️</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">Inbox Defence System</div>
+      <div class="card-subtitle">SCENARIO 08 · PRODUCTIVITY</div>
+      <div class="card-desc">Sort, triage, and file. Every meeting gets a one-page brief 15 min before it starts. You walk in knowing everyone in the room.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>71 verified</div><div class="meta-item">↓ 54 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-knowledge" class="scenario-card" style="--card-color:#ffc107">
+      <div class="card-top">
+        <div class="card-icon">🌱</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">4 Skills</span></div>
+      </div>
+      <div class="card-title">Personal Knowledge Gardener</div>
+      <div class="card-subtitle">SCENARIO 09 · KNOWLEDGE</div>
+      <div class="card-desc">Your agent builds your second brain. Captures, connects, and surfaces what matters — from Obsidian notes to conversation memory.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-green"></span>64 verified</div><div class="meta-item">↓ 48 installs</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#pack-automation" class="scenario-card" style="--card-color:#ff4f40">
+      <div class="card-top">
+        <div class="card-icon">🖥️</div>
+        <div class="card-badges"><span class="badge badge-verified">✅ Verified</span><span class="badge badge-skills">3 Skills</span></div>
+      </div>
+      <div class="card-title">Browser &amp; Desktop Automation</div>
+      <div class="card-subtitle">SCENARIO 10 · AUTOMATION</div>
+      <div class="card-desc">Vision-based browser control, desktop app automation, screenshot-driven workflows — your agent sees and acts like a human operator.</div>
+      <div class="card-footer">
+        <div class="card-meta"><div class="meta-item"><span class="dot dot-yellow"></span>In curation</div></div>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ═══════════════════ PACK 01: AI RESEARCH AGENT ═══════════════════ -->
+<span class="pack-anchor" id="pack-research"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🔬 Scenario 01 · Research</div>
+      <div class="pack-title">AI Research<br>Agent</div>
+      <div class="pack-tagline">From question to structured report in minutes. Your agent goes deep across the web, academic databases, and local knowledge — you just read the output.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">112</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">73</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">91</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">kesslerio/academic-deep-research</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-rec">🥇 Recommended</span></div>
+        <div class="skill-desc">Academic-focused deep research — queries arXiv, PubMed, Semantic Scholar. Extracts key findings, methodology, citations. For literature reviews and technical due diligence.</div>
+        <div class="skill-votes"><span>👍 58</span><span>📦 9500</span><span class="vc">✅ 51</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('kesslerio/academic-deep-research','https://clawhub.ai/kesslerio/academic-deep-research','clawhub install kesslerio/academic-deep-research')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/summarize</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Summarize any URL, document, or text blob. Handles long content with chunking. Clean structured output — TL;DR, key points, action items. Works on PDFs, articles, transcripts.</div>
+        <div class="skill-votes"><span>👍 49</span><span>📦 37</span><span class="vc">✅ 44</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/summarize','https://github.com/openclaw/openclaw/tree/main/skills/summarize','clawhub install steipete/summarize')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/goplaces</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Google Places API wrapper for location intelligence. Search businesses, get reviews, operating hours, coordinates. Research local markets, competition, or plan logistics automatically.</div>
+        <div class="skill-votes"><span>👍 33</span><span>📦 25</span><span class="vc">✅ 29</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/goplaces','https://github.com/openclaw/openclaw/tree/main/skills/goplaces','clawhub install steipete/goplaces')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>steipete/summarize</strong> — Start here. Point at any URL or paste any text to validate output quality instantly.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>kesslerio/academic-deep-research</strong> — Add for technical topics. No API key required — queries arXiv, PubMed and Semantic Scholar directly.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>steipete/goplaces</strong> — Add for local/market research. Combines with summarize for full context on any business or location.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the academic-deep-research skill to investigate: AI agent memory architectures — compare RAG, vector databases, and session cache. Output a structured report with an executive summary, trade-off analysis, and a recommended approach.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the academic-deep-research skill to investigate: AI agent memory architectures — compare RAG, vector databases, and session cache. Output a structured report with an executive summary, trade-off analysis, and a recommended approach.</p></div>
+      <div class="success-metric">Success = a structured report with 3+ sections, cited sources, and a recommendation. Raw search results with no synthesis = add more specific instructions in your follow-up.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 02: WORKFLOW AUTOMATION ═══════════════════ -->
+<span class="pack-anchor" id="pack-workflow"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">⚙️ Scenario 02 · Automation</div>
+      <div class="pack-title">Workflow<br>Automation</div>
+      <div class="pack-tagline">Terminal control, GitHub repo ops, autonomous task loops, cross-app integrations. Your agent runs complex multi-step pipelines with zero manual handoffs.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">103</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">67</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">83</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/tmux</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-start">Start Here</span></div>
+        <div class="skill-desc">Terminal multiplexer control — run persistent shell sessions, execute commands, capture output. The power tool for any agent that needs to drive a terminal or run long-running processes.</div>
+        <div class="skill-votes"><span>👍 63</span><span>📦 48</span><span class="vc">✅ 57</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/tmux','https://github.com/openclaw/openclaw/tree/main/skills/tmux','clawhub install steipete/tmux')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/github</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-team">👑 Team Grade</span></div>
+        <div class="skill-desc">Full GitHub API: PRs, issues, code review, dependency checks. Handles the Repo Janitor workflow — triage PRs, flag stale issues, summarize diffs, monitor test coverage automatically.</div>
+        <div class="skill-votes"><span>👍 71</span><span>📦 53</span><span class="vc">✅ 62</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/github','https://github.com/openclaw/openclaw/tree/main/skills/github','clawhub install steipete/github')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">ANVEAI/agent-autonomy-kit</span><span class="skill-badge skill-review">🟡 Review</span></div>
+        <div class="skill-desc">Enables autonomous multi-step task loops — plan, act, observe, retry. The control layer for long-running agent jobs. Review source before deployment in production environments.</div>
+        <div class="skill-votes"><span>👍 38</span><span>📦 27</span><span class="vc">✅ 32</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('ANVEAI/agent-autonomy-kit','https://clawhub.ai/ryancampbell/agent-autonomy-kit','clawhub install ryancampbell/agent-autonomy-kit')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">composio/composio</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">250+ app integrations via Composio — Slack, Gmail, Notion, Jira, Salesforce, GitHub and more. One skill to connect your agent to your entire SaaS stack with managed auth.</div>
+        <div class="skill-votes"><span>👍 55</span><span>📦 41</span><span class="vc">✅ 48</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('composio/composio','https://github.com/composiohq/composio','clawhub install composio/composio')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>steipete/github</strong> — Start with repo ops. Validate GitHub token access — create a test issue to confirm write permissions.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>steipete/tmux</strong> — Add terminal control. Test with a simple ls command in a persistent session.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>composio/composio</strong> — Connect your SaaS tools. Authorize apps you need — each app requires one-time OAuth in the Composio dashboard.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the github skill to scan my repos and list all open PRs not updated in the past 14 days. For each PR, generate a short status summary and a recommended next action.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the github skill to scan my repos and list all open PRs not updated in the past 14 days. For each PR, generate a short status summary and a recommended next action.</p></div>
+      <div class="success-metric">Success = a structured list of stale PRs with summaries and action recommendations. Auth error = GitHub token scope needs repo:read permissions.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 03: AGENT SELF-EVOLUTION ═══════════════════ -->
+<span class="pack-anchor" id="pack-selfimprove"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🧬 Scenario 03 · AI</div>
+      <div class="pack-title">Agent<br>Self-Evolution</div>
+      <div class="pack-tagline">Your agent learns from every run, remembers across sessions, and builds its own new skills. The meta-layer that makes every other pack better over time.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">95</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">58</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">77</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">pskoett/self-improving-agent</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-rec">🥇 Recommended</span></div>
+        <div class="skill-desc">Captures learnings, errors, and corrections to enable continuous improvement. Agent analyses its own past runs, identifies failure patterns, and generates improved approaches for future tasks.</div>
+        <div class="skill-votes"><span>👍 67</span><span>📦 181000</span><span class="vc">✅ 58</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('pskoett/self-improving-agent','https://github.com/pskoett/self-improving-agent','clawhub install pskoett/self-improving-agent')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/skill-creator</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-team">👑 Team Grade</span></div>
+        <div class="skill-desc">Your agent writes and installs new OpenClaw skills on demand. Describe a capability you need — it scaffolds, writes, and registers the skill in your local environment. Meta-level productivity.</div>
+        <div class="skill-votes"><span>👍 72</span><span>📦 53</span><span class="vc">✅ 62</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/skill-creator','https://github.com/openclaw/openclaw/tree/main/skills/skill-creator','clawhub install steipete/skill-creator')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">ktpriyatham/triple-memory</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Three-layer persistent memory: episodic (what happened), semantic (what things mean), procedural (how to do things). Cross-session recall that makes your agent genuinely smarter over time.</div>
+        <div class="skill-votes"><span>👍 61</span><span>📦 44</span><span class="vc">✅ 53</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('ktpriyatham/triple-memory','https://github.com/openclaw/skills/tree/main/skills/ktpriyatham/triple-memory-skill','clawhub install ktpriyatham/triple-memory')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>ktpriyatham/triple-memory</strong> — Install first. Memory must be active before you start testing the other skills — it needs to observe runs to learn from them.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>pskoett/self-improving-agent</strong> — Run after 5+ sessions. Give it your task history and let it identify patterns. Best run weekly, not continuously.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>steipete/skill-creator</strong> — Use when you hit a capability gap. Describe what you need in plain language — it handles scaffolding, code, and registration automatically.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the skill-creator skill to build a new skill: fetch the top 5 Hacker News posts every morning and post a digest to my Slack channel #morning-brief.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the skill-creator skill to build a new skill: fetch the top 5 Hacker News posts every morning and post a digest to my Slack channel #morning-brief.</p></div>
+      <div class="success-metric">Success = a new skill file created in your skills directory, ready to install. The agent should walk you through confirming the generated code before registering it.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 04: SOCIAL MEDIA INTERN ═══════════════════ -->
+<span class="pack-anchor" id="pack-social"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">📡 Scenario 04 · Monitoring</div>
+      <div class="pack-title">24/7 Social Media<br>Intern</div>
+      <div class="pack-tagline">Reddit, YouTube, Twitter/X — monitored 24/7. Surface trends and sentiment shifts before they go mainstream.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">118</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">76</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">98</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">buksan1950/reddit-readonly</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Monitor hot posts and keyword mentions across subreddits — no login required. Pure read-only intelligence. Start here for community signal.</div>
+        <div class="skill-votes"><span>👍 72</span><span>📦 54</span><span class="vc">✅ 61</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('buksan1950/reddit-readonly','https://github.com/openclaw/skills/tree/main/skills/buksan1950/reddit-readonly','clawhub install buksan1950/reddit-readonly')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">therohitdas/youtube-full</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">YouTube API-powered: video data, comment sentiment, transcript extraction. Understand what's gaining traction before view counts explode.</div>
+        <div class="skill-votes"><span>👍 48</span><span>📦 37</span><span class="vc">✅ 42</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('therohitdas/youtube-full','https://github.com/openclaw/skills/tree/main/skills/therohitdas/youtube-full','clawhub install therohitdas/youtube-full')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">psmamm/social-media-agent</span><span class="skill-badge skill-review">🟡 Review</span></div>
+        <div class="skill-desc">Browser-based agent that operates social platforms like a real user. Twitter/X trending topics and beyond. Review source code recommended before full deployment.</div>
+        <div class="skill-votes"><span>👍 39</span><span>📦 28</span><span class="vc">✅ 31</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('psmamm/social-media-agent','https://github.com/openclaw/skills/tree/main/skills/psmamm/social-media-agent','clawhub install psmamm/social-media-agent')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>buksan1950/reddit-readonly</strong> — Safest start. No auth required. Validate your topic coverage first.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>therohitdas/youtube-full</strong> — Add after Reddit is running. Requires YouTube Data API key (free tier sufficient).</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>psmamm/social-media-agent</strong> — Add Twitter/X last. Audit the source before deploying (🟡 Review status).</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the reddit-readonly skill to monitor r/MachineLearning — surface the top posts from the last 24 hours, ranked by score, with a one-line summary for each.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the reddit-readonly skill to monitor r/MachineLearning — surface the top posts from the last 24 hours, ranked by score, with a one-line summary for each.</p></div>
+      <div class="success-metric">You should see ranked posts with scores, comment counts, and a sentiment summary. Raw JSON output means the skill needs your topic keywords.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 05: CONTENT FACTORY ═══════════════════ -->
+<span class="pack-anchor" id="pack-content"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🎨 Scenario 05 · Content</div>
+      <div class="pack-title">Content<br>Factory</div>
+      <div class="pack-tagline">Infographics, cover images, AI visuals, social posts — your agent goes from a brief to publish-ready assets without leaving the conversation.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">86</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">52</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">69</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">JimLiu/baoyu-infographic</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-rec">🥇 Recommended</span></div>
+        <div class="skill-desc">Generate professional infographics from any text or data. Auto-layouts, icon selection, color theming. Most versatile visual skill for Chinese and English content — output is shareable SVG or PNG.</div>
+        <div class="skill-votes"><span>👍 59</span><span>📦 44</span><span class="vc">✅ 51</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('JimLiu/baoyu-infographic','https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-infographic','clawhub install JimLiu/baoyu-infographic')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">JimLiu/baoyu-cover-image</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Generate blog and article cover images with title, subtitle, and visual design. Handles Chinese typography correctly. Output sized for Substack, WeChat, XHS — one command per platform.</div>
+        <div class="skill-votes"><span>👍 47</span><span>📦 36</span><span class="vc">✅ 42</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('JimLiu/baoyu-cover-image','https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-cover-image','clawhub install JimLiu/baoyu-cover-image')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/openai-image-gen</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">DALL·E 3 and GPT-image-1 via OpenAI API. High-fidelity image generation with prompt refinement. Requires OpenAI API key — best for creative or product imagery with precise prompt control.</div>
+        <div class="skill-votes"><span>👍 53</span><span>📦 40</span><span class="vc">✅ 47</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/openai-image-gen','https://github.com/openclaw/openclaw/tree/main/skills/openai-image-gen','clawhub install steipete/openai-image-gen')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">JimLiu/baoyu-xhs-images</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">小红书 (XHS) native image cards — correct aspect ratios, Chinese font handling, platform-optimized layouts. Drop in your text, get share-ready XHS post images in seconds.</div>
+        <div class="skill-votes"><span>👍 41</span><span>📦 31</span><span class="vc">✅ 36</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('JimLiu/baoyu-xhs-images','https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-xhs-images','clawhub install JimLiu/baoyu-xhs-images')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>JimLiu/baoyu-infographic</strong> — Start here. Generate a test infographic on any topic — no API key needed beyond your base LLM.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>JimLiu/baoyu-cover-image</strong> — Add for blog/article covers. Specify platform in your prompt: "Substack cover" or "XHS banner".</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>steipete/openai-image-gen</strong> — Add when you need photorealistic or highly styled visuals. Requires OpenAI API key with image generation enabled.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the baoyu-infographic skill to create a workflow diagram: AI Agent pipeline (user input → skill call → structured output). Style: dark background, blue-purple gradient, tech aesthetic.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the baoyu-infographic skill to create a workflow diagram: AI Agent pipeline (user input → skill call → structured output). Style: dark background, blue-purple gradient, tech aesthetic.</p></div>
+      <div class="success-metric">Success = a rendered infographic with flow diagram, icons, and styled layout. Plain text output = the skill needs a rendering environment — check Claude desktop version.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 06: MORNING BRIEF ═══════════════════ -->
+<span class="pack-anchor" id="pack-morning"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🌅 Scenario 06 · Intelligence</div>
+      <div class="pack-title">Morning Brief</div>
+      <div class="pack-tagline">Your agent delivers a curated intelligence brief before you open your phone — zero manual work required.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">142</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">89</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">124</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row">
+          <span class="skill-name">dinstein/tech-news-digest</span>
+          <span class="skill-badge skill-safe">🟢 Safe</span>
+          <span class="skill-badge skill-rec">🥇 Recommended</span>
+        </div>
+        <div class="skill-desc">5-layer data pipeline — RSS + Twitter/X KOL. Built-in quality scoring, multi-format output. Best signal-to-noise for tech/AI/startup focus. No config needed to start.</div>
+        <div class="skill-votes"><span>👍 87</span><span>📦 62</span><span class="vc">✅ 78</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('dinstein/tech-news-digest','https://github.com/openclaw/skills/tree/main/skills/dinstein/tech-news-digest','clawhub install dinstein/tech-news-digest')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row">
+          <span class="skill-name">kevinho/clawfeed</span>
+          <span class="skill-badge skill-safe">🟢 Safe</span>
+          <span class="skill-badge skill-team">👑 Team Grade</span>
+        </div>
+        <div class="skill-desc">The most productized feed solution in the ecosystem. Solves source management + readability together. Best for long-term, expandable setups — personal or team.</div>
+        <div class="skill-votes"><span>👍 54</span><span>📦 38</span><span class="vc">✅ 44</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('kevinho/clawfeed','https://github.com/kevinho/clawfeed','clawhub install kevinho/clawfeed')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row">
+          <span class="skill-name">steipete/blogwatcher</span>
+          <span class="skill-badge skill-safe">🟢 Safe</span>
+        </div>
+        <div class="skill-desc">Pure RSS/Atom monitor by OpenClaw founder. Watches URLs, alerts on change. Build your private intelligence network on top of niche blogs and researcher pages.</div>
+        <div class="skill-votes"><span>👍 41</span><span>📦 33</span><span class="vc">✅ 38</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/blogwatcher','https://github.com/openclaw/skills/tree/main/skills/steipete/blogwatcher','clawhub install steipete/blogwatcher')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>dinstein/tech-news-digest</strong> — Core pipeline. Handles collection, scoring, and output format out of the box.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>steipete/blogwatcher</strong> — Add niche sources. Run in parallel to expand your signal coverage.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>kevinho/clawfeed</strong> — Optional upgrade when you're ready to manage sources at scale or collaborate with a team.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Run the tech-news-digest skill. Topics: AI agents, startup funding rounds, open-source releases. Deliver a structured morning brief with categories, relevance scores, and a Read Later section.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Run the tech-news-digest skill. Topics: AI agents, startup funding rounds, open-source releases. Deliver a structured morning brief with categories, relevance scores, and a Read Later section.</p></div>
+      <div class="success-metric">You'll see a structured brief with 3+ categories, scored items, and a Read Later section. If you see raw RSS dumps, add topics using Option B.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 07: OPPORTUNITY RADAR & TRADING ═══════════════════ -->
+<span class="pack-anchor" id="pack-trading"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">📈 Scenario 07 · Finance</div>
+      <div class="pack-title">Opportunity Radar<br>& Trading</div>
+      <div class="pack-tagline">Insider filings, macro signals, stock fundamentals, prediction markets — see the signal before the crowd does.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">104</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">61</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">87</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">lsj210001/finnhub-pro</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-start">Start Here</span></div>
+        <div class="skill-desc">Finnhub API: stock news, sentiment scoring, insider trading filings. Best for catching institutional move signals early. Requires free Finnhub API key.</div>
+        <div class="skill-votes"><span>👍 64</span><span>📦 47</span><span class="vc">✅ 55</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('lsj210001/finnhub-pro','https://github.com/openclaw/skills/tree/main/skills/lsj210001/finnhub-pro','clawhub install lsj210001/finnhub-pro')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">veeramanikandanr48/market-environment-analysis</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Macro market environment analysis and key signal detection. Answers "What is the market actually doing right now?" before you look at individual stocks.</div>
+        <div class="skill-votes"><span>👍 51</span><span>📦 38</span><span class="vc">✅ 44</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('veeramanikandanr48/market-environment-analysis','https://github.com/openclaw/skills/tree/main/skills/veeramanikandanr48/market-environment-analysis','clawhub install veeramanikandanr48/market-environment-analysis')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">veeramanikandanr48/us-stock-analysis</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">US stock fundamentals, valuation metrics, analyst signals. Pair with market-environment-analysis for macro context + company-level read in one workflow.</div>
+        <div class="skill-votes"><span>👍 47</span><span>📦 35</span><span class="vc">✅ 41</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('veeramanikandanr48/us-stock-analysis','https://github.com/openclaw/skills/tree/main/skills/veeramanikandanr48/us-stock-analysis','clawhub install veeramanikandanr48/us-stock-analysis')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">andretuta/polymarket-agent</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Prediction market odds from Polymarket — political events, macro outcomes, binary catalysts. The crowd's probability, surfaced on demand before it moves markets.</div>
+        <div class="skill-votes"><span>👍 38</span><span>📦 29</span><span class="vc">✅ 33</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('andretuta/polymarket-agent','https://github.com/openclaw/skills/tree/main/skills/andretuta/polymarket-agent','clawhub install andretuta/polymarket-agent')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>lsj210001/finnhub-pro</strong> — Get free Finnhub API key at finnhub.io first. Validate news + insider data flow.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>market-environment-analysis</strong> — Layer in macro context. Run daily before any stock-level analysis.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>us-stock-analysis</strong> — Add company fundamentals. Pair with macro report for the full picture.</div></div>
+      <div class="order-item"><div class="order-num">4</div><div class="order-text"><strong>andretuta/polymarket-agent</strong> — Add for event-driven trades. Best before binary catalysts: earnings, elections, Fed decisions.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the finnhub-pro skill to pull NVDA insider trading activity for the past 30 days — names, roles, share counts, and transaction direction.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the finnhub-pro skill to pull NVDA insider trading activity for the past 30 days — names, roles, share counts, and transaction direction.</p></div>
+      <div class="success-metric">You should see a timeline of insider transactions with names, roles, share counts, and sentiment scoring. API error = Finnhub key not yet configured.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 08: INBOX DEFENCE ═══════════════════ -->
+<span class="pack-anchor" id="pack-inbox"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🛡️ Scenario 08 · Productivity</div>
+      <div class="pack-title">Inbox Defence<br>System</div>
+      <div class="pack-tagline">Triage, file, and prep. Your agent handles the inbox and briefs you before every meeting — you walk in knowing everyone in the room.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">89</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">54</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">71</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/gog</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-start">Start Here</span></div>
+        <div class="skill-desc">Email triage and classification. Newsletters → archive. Invoices → finance folder. Important items → flagged and forwarded to your channel. Silence the noise.</div>
+        <div class="skill-votes"><span>👍 57</span><span>📦 42</span><span class="vc">✅ 49</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/gog','https://github.com/openclaw/skills/tree/main/skills/steipete/gog','clawhub install steipete/gog')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">tonimelisma/email-to-calendar</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Scans inbox for meeting invitations and syncs them to your calendar automatically. Catches the scheduling emails you miss. Requires Gmail + Google Calendar permissions.</div>
+        <div class="skill-votes"><span>👍 44</span><span>📦 33</span><span class="vc">✅ 38</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('tonimelisma/email-to-calendar','https://github.com/openclaw/skills/tree/main/skills/tonimelisma/email-to-calendar','clawhub install tonimelisma/email-to-calendar')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">audsmith28/meeting-prep-agent</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">15 minutes before every meeting: who's in the room, what to bring up, what to watch for. One-page brief generated automatically. Walk in prepared every time.</div>
+        <div class="skill-votes"><span>👍 48</span><span>📦 36</span><span class="vc">✅ 42</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('audsmith28/meeting-prep-agent','https://github.com/openclaw/skills/tree/main/skills/audsmith28/meeting-prep-agent','clawhub install audsmith28/meeting-prep-agent')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>steipete/gog</strong> — Start with triage. Run once on last 48h. Confirm categorization logic before going live.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>tonimelisma/email-to-calendar</strong> — Add calendar sync after triage works. Requires Gmail + Google Calendar auth.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>audsmith28/meeting-prep-agent</strong> — Enable last. Set to trigger 15 min before each calendar event automatically.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Combined Workflow — Run after all 3 installed</span>
+        <button class="copy-btn" onclick="copyText(this,'Triage my last 48 hours of inbox, use email-to-calendar to sync any meeting invites, then use meeting-prep-agent to generate a pre-meeting brief for each event on tomorrow\'s schedule.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Triage my last 48 hours of inbox, use email-to-calendar to sync any meeting invites, then use meeting-prep-agent to generate a pre-meeting brief for each event on tomorrow's schedule.</p></div>
+      <div class="success-metric">Success = inbox categorized + calendar updated + at least one meeting brief with attendee context. Too long? Reply: "Just the key points, max 5 bullets"</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 09: KNOWLEDGE GARDENER ═══════════════════ -->
+<span class="pack-anchor" id="pack-knowledge"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🌱 Scenario 09 · Knowledge</div>
+      <div class="pack-title">Personal Knowledge<br>Gardener</div>
+      <div class="pack-tagline">Capture, connect, surface. Your agent tends your second brain — Obsidian, Notion, Bear, and triple-layer memory working together.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">79</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">48</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">64</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/obsidian</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-start">Start Here</span></div>
+        <div class="skill-desc">Read and write Obsidian vaults from your agent. Create notes, link ideas, query your existing knowledge base. The foundation of your agent-powered second brain.</div>
+        <div class="skill-votes"><span>👍 52</span><span>📦 39</span><span class="vc">✅ 45</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/obsidian','https://github.com/openclaw/openclaw/tree/main/skills/obsidian','clawhub install steipete/obsidian')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/notion</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Full Notion integration — create pages, query databases, update properties. Connects your agent to your team's shared knowledge workspace seamlessly.</div>
+        <div class="skill-votes"><span>👍 47</span><span>📦 35</span><span class="vc">✅ 41</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/notion','https://github.com/openclaw/openclaw/tree/main/skills/notion','clawhub install steipete/notion')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">ktpriyatham/triple-memory</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-team">👑 Team Grade</span></div>
+        <div class="skill-desc">Three-layer memory system: episodic, semantic, and procedural. Your agent remembers what happened, what things mean, and how to do things — across all sessions.</div>
+        <div class="skill-votes"><span>👍 61</span><span>📦 44</span><span class="vc">✅ 53</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('ktpriyatham/triple-memory','https://github.com/openclaw/skills/tree/main/skills/ktpriyatham/triple-memory-skill','clawhub install ktpriyatham/triple-memory')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">JimLiu/baoyu-url-to-markdown</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Convert any URL to clean Markdown — strips noise, preserves structure. Feed web content directly into Obsidian or Notion without manual copy-paste.</div>
+        <div class="skill-votes"><span>👍 38</span><span>📦 29</span><span class="vc">✅ 33</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('JimLiu/baoyu-url-to-markdown','https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-url-to-markdown','clawhub install JimLiu/baoyu-url-to-markdown')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>steipete/obsidian</strong> — Connect your vault first. Test with a simple note-creation command to verify path access.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>JimLiu/baoyu-url-to-markdown</strong> — Add web-to-note pipeline. Point at URLs, receive clean Markdown directly into your vault.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>ktpriyatham/triple-memory</strong> — Layer in persistent memory last. Run after 2+ weeks of use so the agent has enough context to learn from.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the obsidian skill to create a new note: AI Agent Memory Systems Compared. Then use baoyu-url-to-markdown to fetch this article and append the clean content to that note.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the obsidian skill to create a new note: "AI Agent Memory Systems Compared". Then use baoyu-url-to-markdown to fetch this article and append the clean content to that note.</p></div>
+      <div class="success-metric">Success = a new note appears in your vault with clean imported content. If path error occurs, configure vault path in obsidian skill settings first.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════ PACK 10: BROWSER & DESKTOP AUTOMATION ═══════════════════ -->
+<span class="pack-anchor" id="pack-automation"></span>
+<section class="pack-section">
+<div class="pack-inner">
+  <div class="pack-header">
+    <div>
+      <div class="pack-eyebrow">🖥️ Scenario 10 · Automation</div>
+      <div class="pack-title">Browser &amp; Desktop<br>Automation</div>
+      <div class="pack-tagline">Vision-based browser control, screenshot intelligence, screenshot-to-article — your agent sees and acts like a human operator, at machine speed.</div>
+    </div>
+    <div>
+      <div class="trust-header-label">Community Trust</div>
+      <div class="trust-bar">
+        <div class="trust-item"><span class="trust-num" style="color:var(--orange)">148</span><span class="trust-label">👍 Upvotes</span></div>
+        <div class="trust-item"><span class="trust-num">39400</span><span class="trust-label">📦 Installs</span></div>
+        <div class="trust-item"><span class="trust-num" style="color:var(--green)">134</span><span class="trust-label">✅ Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/peekaboo</span><span class="skill-badge skill-safe">🟢 Safe</span><span class="skill-badge skill-start">Start Here</span></div>
+        <div class="skill-desc">macOS screenshot and vision tool — captures screen regions, annotates UI elements, enables visual reasoning about the desktop state. Core skill for macOS automation agents.</div>
+        <div class="skill-votes"><span>👍 59</span><span>📦 16400</span><span class="vc">✅ 51</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/peekaboo','https://github.com/openclaw/openclaw/tree/main/skills/peekaboo','clawhub install steipete/peekaboo')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">pkiv/browse</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Headless browser control — navigate URLs, click elements, fill forms, extract content. Enables your agent to operate any website programmatically without a visible browser window.</div>
+        <div class="skill-votes"><span>👍 53</span><span>📦 6900</span><span class="vc">✅ 46</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('pkiv/browse','https://github.com/openclaw/skills/tree/main/skills/pkiv/browse','clawhub install pkiv/browse')">📦 Install</button>
+    </div>
+
+    <div class="skill-card">
+      <div>
+        <div class="skill-name-row"><span class="skill-name">steipete/sag</span><span class="skill-badge skill-safe">🟢 Safe</span></div>
+        <div class="skill-desc">Screenshot-to-article generator. Point at any webpage screenshot — the agent reads it visually and produces a summarised article or comparison doc. No HTML access required.</div>
+        <div class="skill-votes"><span>👍 36</span><span>📦 16100</span><span class="vc">✅ 31</span></div>
+      </div>
+      <button class="install-btn" onclick="openModal('steipete/sag','https://github.com/openclaw/openclaw/tree/main/skills/sag','clawhub install steipete/sag')">📦 Install</button>
+    </div>
+  </div>
+
+  <div class="stack-guide">
+    <div class="stack-guide-title"><span>⚡</span> Stack Guide — Install in this order</div>
+    <div class="install-order">
+      <div class="order-item"><div class="order-num">1</div><div class="order-text"><strong>steipete/peekaboo</strong> — Install first. Capture a screenshot of your desktop to confirm vision access is working before layering other skills.</div></div>
+      <div class="order-item"><div class="order-num">2</div><div class="order-text"><strong>pkiv/browse</strong> — Add browser control. Test by navigating to a URL and extracting the page title — verify programmatic access works.</div></div>
+      <div class="order-item"><div class="order-num">3</div><div class="order-text"><strong>steipete/sag</strong> — Add visual reading. Point it at a screenshot from peekaboo to convert any screen state into a structured summary.</div></div>
+    </div>
+    <div class="demo-task">
+      <div class="demo-task-header">
+        <span class="demo-task-label">🎯 Demo Task — Run this after install</span>
+        <button class="copy-btn" onclick="copyText(this,'Use the peekaboo skill to capture the current screen, then pass it to the sag skill for analysis. Output a structured summary: what is this page, what are the key elements, and what should I do next.')">Copy</button>
+      </div>
+      <div class="demo-task-body"><p>Use the peekaboo skill to capture the current screen, then pass it to the sag skill for analysis. Output a structured summary: what is this page, what are the key elements, and what should I do next.</p></div>
+      <div class="success-metric">Success = a structured summary appears describing the screen content. If peekaboo returns a permission error, grant Screen Recording access in System Settings → Privacy.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- MODULE 3: BROWSE SECTION -->
+<section class="browse-section" id="module3">
+<div class="browse-inner">
+  <div class="section-header" style="padding:0;margin-bottom:24px;">
+    <div class="section-label">Module 3 · Full Skill Library</div>
+    <div class="section-title" style="font-size:clamp(22px,2.5vw,32px);font-weight:800;letter-spacing:-1px;">Browse &amp; Filter Skills</div>
+  </div>
+  <div class="browse-top">
+    <div class="browse-search-wrap">
+      <span class="browse-search-icon">🔍</span>
+      <input class="browse-search" type="text" placeholder="Search skills…" oninput="onSearch(this.value)" id="browseSearchInput">
+    </div>
+    <div class="sort-wrap">
+      <span class="sort-label">SORT</span>
+      <select class="sort-select" onchange="setSort(this.value)">
+        <option value="hot">🔥 Hot</option>
+        <option value="rated">⭐ Top Rated</option>
+        <option value="new">🆕 New</option>
+      </select>
+    </div>
+  </div>
+  <div class="filter-tabs" id="filterTabs">
+    <button class="filter-tab active" onclick="setFilter('all')" data-tag="all">All <span class="tab-count" id="cnt-all">53</span></button>
+    <button class="filter-tab" onclick="setFilter('intelligence')" data-tag="intelligence">🧠 Intelligence <span class="tab-count" id="cnt-intelligence">8</span></button>
+    <button class="filter-tab" onclick="setFilter('social')" data-tag="social">📡 Social <span class="tab-count" id="cnt-social">8</span></button>
+    <button class="filter-tab" onclick="setFilter('finance')" data-tag="finance">📈 Finance <span class="tab-count" id="cnt-finance">4</span></button>
+    <button class="filter-tab" onclick="setFilter('productivity')" data-tag="productivity">⚡ Productivity <span class="tab-count" id="cnt-productivity">8</span></button>
+    <button class="filter-tab" onclick="setFilter('automation')" data-tag="automation">🤖 Automation <span class="tab-count" id="cnt-automation">7</span></button>
+    <button class="filter-tab" onclick="setFilter('research')" data-tag="research">🔬 Research <span class="tab-count" id="cnt-research">6</span></button>
+    <button class="filter-tab" onclick="setFilter('content')" data-tag="content">🎨 Content <span class="tab-count" id="cnt-content">7</span></button>
+    <button class="filter-tab" onclick="setFilter('dev-tools')" data-tag="dev-tools">🛠 Dev Tools <span class="tab-count" id="cnt-dev-tools">5</span></button>
+  </div>
+  <div class="result-count" id="resultCount">Showing 48 skills</div>
+  <div class="browse-grid" id="browseGrid"></div>
+</div>
+</section>
+
+<footer>
+  <div class="footer-brand"><span>Skill</span>Hunt · BotLearn</div>
+  <div class="footer-links">
+    <a href="https://www.botlearn.ai/zh">Docs</a>
+    <a href="https://www.botlearn.ai/community">Community</a>
+    <a href="https://github.com/orgs/botlearn-ai">GitHub</a>
+    <a href="https://discord.gg/YXqJj5vMZd">Discord</a>
+  </div>
+  <div class="footer-note">v0.1 MVP · Skills grow with the community</div>
+</footer>
+
+<!-- INSTALL MODAL -->
+<div class="modal-overlay" id="installModal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Install Skill</div>
+        <div class="modal-subtitle" id="modalSkillName"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="install-option">
+        <div class="option-label">Method 1 — Natural Language <span class="option-rec">RECOMMENDED</span></div>
+        <div class="code-block">
+          <div class="code-text" id="nlCode"></div>
+          <button class="copy-btn" onclick="copyCode('nlCode',this)">Copy</button>
+        </div>
+      </div>
+      <div class="install-option">
+        <div class="option-label">Method 2 — CLI</div>
+        <div class="code-block">
+          <div class="code-text" id="cliCode"></div>
+          <button class="copy-btn" onclick="copyCode('cliCode',this)">Copy</button>
+        </div>
+      </div>
+      <div class="modal-tip">💡 Paste the natural language command directly into your agent conversation. Your agent handles the rest — no terminal needed.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── BROWSE DATA ── */
+/*
+ * TODO: Replace dummy data with real Clawhub data
+ * - installs: large numbers (~1k+) are real Clawhub pulls; small numbers (<500) are placeholder estimates
+ * - votes: ALL dummy — needs real upvote data from Clawhub/community
+ * - verified: ALL dummy — needs real verification count from BotLearn community
+ * - Pack-level trust bars (upvotes/installs/verified per scenario): ALL dummy
+ */
+const SKILLS = [
+  /* ── INTELLIGENCE ── */
+  { id:'dinstein/tech-news-digest', desc:'5-layer data pipeline — RSS + Twitter/X KOL. Built-in quality scoring, multi-format output. Best signal-to-noise for tech/AI/startup focus. No config needed to start.', tags:['intelligence','news'], safety:'safe', badges:[{cls:'skill-rec',label:'🥇 Rec'}], votes:87, installs:4100, verified:78, repo:'https://github.com/openclaw/skills/tree/main/skills/dinstein/tech-news-digest', cli:'clawhub install dinstein/tech-news-digest' },
+  { id:'kevinho/clawfeed', desc:'The most productized feed solution in the ecosystem. Solves source management + readability together. Best for long-term, expandable setups — personal or team.', tags:['intelligence','productivity'], safety:'safe', badges:[{cls:'skill-team',label:'👑 Team Grade'},{cls:'skill-github',label:'⚠️ GitHub Only'}], votes:54, installs:38, verified:44, repo:'https://github.com/kevinho/clawfeed', cli:'clawhub install kevinho/clawfeed' },
+  { id:'steipete/blogwatcher', desc:'Pure RSS/Atom monitor by OpenClaw founder. Watches URLs, alerts on change. Build your private intelligence network on top of niche blogs and researcher pages.', tags:['intelligence','monitoring'], safety:'safe', badges:[], votes:41, installs:23500, verified:38, repo:'https://github.com/openclaw/openclaw/tree/main/skills/blogwatcher', cli:'clawhub install steipete/blogwatcher' },
+  { id:'pskoett/self-improving-agent', desc:'Captures learnings, errors, and corrections to enable continuous improvement. Agent analyses its own past runs, identifies failure patterns, and generates improved approaches for future tasks.', tags:['intelligence','automation'], safety:'safe', badges:[{cls:'skill-rec',label:'🥇 Rec'}], votes:67, installs:181000, verified:58, repo:'https://github.com/pskoett/self-improving-agent', cli:'clawhub install pskoett/self-improving-agent' },
+  { id:'steipete/gemini', desc:'Google Gemini API integration — leverage Gemini\'s long context window, multimodal capabilities, and document understanding directly from your OpenClaw agent.', tags:['intelligence'], safety:'safe', badges:[], votes:43, installs:20600, verified:37, repo:'https://github.com/openclaw/openclaw/tree/main/skills/gemini', cli:'clawhub install steipete/gemini' },
+  { id:'ktpriyatham/triple-memory', desc:'Three-layer persistent memory: episodic (what happened), semantic (what things mean), procedural (how to do things). Cross-session recall that makes your agent genuinely smarter over time.', tags:['intelligence','productivity'], safety:'safe', badges:[{cls:'skill-team',label:'👑 Team Grade'}], votes:61, installs:3100, verified:53, repo:'https://github.com/openclaw/skills/tree/main/skills/ktpriyatham/triple-memory-skill', cli:'clawhub install ktpriyatham/triple-memory' },
+  /* ── SOCIAL ── */
+  { id:'buksan1950/reddit-readonly', desc:'Monitor hot posts and keyword mentions across subreddits — no login required. Pure read-only intelligence. Start here for community signal.', tags:['social','monitoring'], safety:'safe', badges:[], votes:72, installs:9600, verified:61, repo:'https://github.com/openclaw/skills/tree/main/skills/buksan1950/reddit-readonly', cli:'clawhub install buksan1950/reddit-readonly' },
+  { id:'therohitdas/youtube-full', desc:'YouTube API-powered: video data, comment sentiment, transcript extraction. Understand what\'s gaining traction before view counts explode.', tags:['social','monitoring'], safety:'safe', badges:[], votes:48, installs:7800, verified:42, repo:'https://github.com/openclaw/skills/tree/main/skills/therohitdas/youtube-full', cli:'clawhub install therohitdas/youtube-full' },
+  { id:'psmamm/social-media-agent', desc:'Browser-based agent that operates social platforms like a real user. Twitter/X trending topics and beyond. Review source code before full deployment.', tags:['social'], safety:'review', badges:[], votes:39, installs:4000, verified:31, repo:'https://github.com/openclaw/skills/tree/main/skills/psmamm/social-media-agent', cli:'clawhub install psmamm/social-media-agent' },
+  { id:'steipete/slack', desc:'Full Slack integration — read channels, post messages, react, manage pins. Connect your agent to your team\'s primary communication layer.', tags:['social','productivity'], safety:'safe', badges:[], votes:56, installs:25300, verified:49, repo:'https://github.com/openclaw/openclaw/tree/main/skills/slack', cli:'clawhub install steipete/slack' },
+  { id:'steipete/discord', desc:'Discord integration — read messages, post to channels, monitor servers. Perfect for community managers and developers living in Discord servers.', tags:['social','productivity'], safety:'safe', badges:[], votes:44, installs:18600, verified:38, repo:'https://github.com/openclaw/openclaw/tree/main/skills/discord', cli:'clawhub install steipete/discord' },
+  { id:'steipete/xurl', desc:'X (Twitter) URL resolver and content fetcher. Get tweet content, thread context, and engagement metrics from X URLs — bypasses paywalls on public content.', tags:['social'], safety:'safe', badges:[], votes:37, installs:3100, verified:32, repo:'https://github.com/openclaw/openclaw/tree/main/skills/xurl', cli:'clawhub install gaurangzalariya/xurl' },
+  { id:'JimLiu/baoyu-post-to-x', desc:'Draft and post content to X (Twitter) with proper formatting, hashtag optimisation, and thread structuring. Built for Chinese creators publishing to X audiences.', tags:['social','content'], safety:'safe', badges:[], votes:35, installs:1500, verified:30, repo:'https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-post-to-x', cli:'clawhub install liuhedev/baoyu-post-to-x' },
+  /* ── FINANCE ── */
+  { id:'lsj210001/finnhub-pro', desc:'Finnhub API: stock news, sentiment scoring, insider trading filings. Best for catching institutional move signals early. Requires free Finnhub API key.', tags:['finance'], safety:'safe', badges:[{cls:'skill-start',label:'Start Here'}], votes:64, installs:2700, verified:55, repo:'https://github.com/openclaw/skills/tree/main/skills/lsj210001/finnhub-pro', cli:'clawhub install lsj210001/finnhub-pro' },
+  { id:'Veeramanikandanr48/market-environment-analysis', desc:'Macro market environment analysis and key signal detection. Answers "What is the market actually doing right now?" before you look at individual stocks.', tags:['finance'], safety:'safe', badges:[], votes:51, installs:6500, verified:44, repo:'https://github.com/openclaw/skills/tree/main/skills/veeramanikandanr48/market-environment-analysis', cli:'clawhub install Veeramanikandanr48/market-environment-analysis' },
+  { id:'Veeramanikandanr48/us-stock-analysis', desc:'US stock fundamentals, valuation metrics, analyst signals. Pair with market-environment-analysis for macro context + company-level read in one workflow.', tags:['finance'], safety:'safe', badges:[], votes:47, installs:10200, verified:41, repo:'https://github.com/openclaw/skills/tree/main/skills/veeramanikandanr48/us-stock-analysis', cli:'clawhub install Veeramanikandanr48/us-stock-analysis' },
+  { id:'Andretuta/polymarket-agent', desc:'Prediction market odds from Polymarket — political events, macro outcomes, binary catalysts. The crowd\'s probability, surfaced on demand before it moves markets.', tags:['finance','social'], safety:'safe', badges:[], votes:38, installs:5100, verified:33, repo:'https://github.com/openclaw/skills/tree/main/skills/andretuta/polymarket-agent', cli:'clawhub install Andretuta/polymarket-agent' },
+  /* ── PRODUCTIVITY ── */
+  { id:'steipete/gog', desc:'Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs. Full control of your Google stack — search mail, create events, read/write Drive — from your agent.', tags:['productivity','inbox'], safety:'safe', badges:[{cls:'skill-start',label:'Start Here'}], votes:57, installs:105000, verified:49, repo:'https://github.com/openclaw/openclaw/tree/main/skills/gog', cli:'clawhub install steipete/gog' },
+  { id:'tonimelisma/email-to-calendar', desc:'Scans inbox for meeting invitations and syncs them to your calendar automatically. Catches the scheduling emails you miss. Requires Gmail + Google Calendar permissions.', tags:['productivity','inbox'], safety:'safe', badges:[], votes:44, installs:4400, verified:38, repo:'https://github.com/openclaw/skills/tree/main/skills/tonimelisma/email-to-calendar', cli:'clawhub install tonimelisma/email-to-calendar' },
+  { id:'audsmith28/meeting-prep-agent', desc:'15 minutes before every meeting: who\'s in the room, what to bring up, what to watch for. One-page brief generated automatically. Walk in prepared every time.', tags:['productivity'], safety:'safe', badges:[], votes:48, installs:806, verified:42, repo:'https://github.com/openclaw/skills/tree/main/skills/audsmith28/meeting-prep-agent', cli:'clawhub install audsmith28/meeting-prep-agent' },
+  { id:'steipete/obsidian', desc:'Read and write Obsidian vaults from your agent. Create notes, link ideas, query your existing knowledge base. The foundation of an agent-powered second brain.', tags:['productivity'], safety:'safe', badges:[], votes:52, installs:46700, verified:45, repo:'https://github.com/openclaw/openclaw/tree/main/skills/obsidian', cli:'clawhub install steipete/obsidian' },
+  { id:'steipete/notion', desc:'Full Notion integration — create pages, query databases, update properties. Connects your agent to your team\'s shared knowledge workspace seamlessly.', tags:['productivity'], safety:'safe', badges:[], votes:47, installs:51200, verified:41, repo:'https://github.com/openclaw/openclaw/tree/main/skills/notion', cli:'clawhub install steipete/notion' },
+  { id:'steipete/things-mac', desc:'Things 3 task manager integration for macOS. Add, list, and complete tasks from your agent. Lets your agent become your proactive to-do list manager.', tags:['productivity'], safety:'safe', badges:[], votes:38, installs:8900, verified:33, repo:'https://github.com/openclaw/openclaw/tree/main/skills/things-mac', cli:'clawhub install steipete/things-mac' },
+  { id:'steipete/trello', desc:'Trello board management — create cards, move between lists, assign members, set due dates. Full Kanban workflow control for project-managing agents.', tags:['productivity'], safety:'safe', badges:[], votes:36, installs:22500, verified:31, repo:'https://github.com/openclaw/openclaw/tree/main/skills/trello', cli:'clawhub install steipete/trello' },
+  { id:'steipete/bear-notes', desc:'Bear note-taking app integration for macOS/iOS. Create, tag, search, and link notes. Lightweight alternative to Obsidian for agents working in the Apple ecosystem.', tags:['productivity'], safety:'safe', badges:[], votes:32, installs:6900, verified:28, repo:'https://github.com/openclaw/openclaw/tree/main/skills/bear-notes', cli:'clawhub install steipete/bear-notes' },
+  /* ── AUTOMATION ── */
+  { id:'steipete/peekaboo', desc:'macOS screenshot and vision tool — captures screen regions, annotates UI elements, enables visual reasoning about the desktop state. Core skill for macOS automation agents.', tags:['automation'], safety:'safe', badges:[{cls:'skill-start',label:'Start Here'}], votes:59, installs:16400, verified:51, repo:'https://github.com/openclaw/openclaw/tree/main/skills/peekaboo', cli:'clawhub install steipete/peekaboo' },
+  { id:'pkiv/browse', desc:'Headless browser control — navigate URLs, click elements, fill forms, extract content. Enables your agent to operate any website programmatically.', tags:['automation'], safety:'safe', badges:[], votes:53, installs:6900, verified:46, repo:'https://github.com/openclaw/skills/tree/main/skills/pkiv/browse', cli:'clawhub install pkiv/browse' },
+  { id:'composio/composio', desc:'250+ app integrations via Composio — Slack, Gmail, Notion, Jira, Salesforce, GitHub. One skill to connect your agent to your entire SaaS stack with managed OAuth.', tags:['automation','dev-tools'], safety:'safe', badges:[{cls:'skill-team',label:'👑 Team Grade'}], votes:55, installs:1200, verified:48, repo:'https://github.com/composiohq/composio', cli:'clawhub install wjayesh/composio' },
+  { id:'steipete/openai-whisper', desc:'OpenAI Whisper integration for speech-to-text. Transcribe audio files, meeting recordings, or voice memos. Handles multiple languages, punctuation, and speaker detection.', tags:['automation'], safety:'safe', badges:[], votes:41, installs:41500, verified:36, repo:'https://github.com/openclaw/openclaw/tree/main/skills/openai-whisper', cli:'clawhub install steipete/openai-whisper' },
+  { id:'steipete/tmux', desc:'Terminal multiplexer control — run persistent shell sessions, execute commands, capture output. Power tool for any agent that needs to drive a terminal or run long-running processes.', tags:['automation','dev-tools'], safety:'safe', badges:[], votes:63, installs:15400, verified:57, repo:'https://github.com/openclaw/openclaw/tree/main/skills/tmux', cli:'clawhub install steipete/tmux' },
+  { id:'ANVEAI/agent-autonomy-kit', desc:'Enables autonomous multi-step task loops — plan, act, observe, retry. The control layer for long-running agent jobs. Review source before deploying in production.', tags:['automation'], safety:'review', badges:[], votes:38, installs:11400, verified:32, repo:'https://clawhub.ai/ryancampbell/agent-autonomy-kit', cli:'clawhub install ryancampbell/agent-autonomy-kit' },
+  /* ── RESEARCH ── */
+  { id:'kesslerio/academic-deep-research', desc:'Academic-focused deep research — queries arXiv, PubMed, Semantic Scholar. Extracts key findings, methodology, citations. For literature reviews and technical due diligence.', tags:['research'], safety:'safe', badges:[{cls:'skill-rec',label:'🥇 Rec'}], votes:58, installs:9500, verified:51, repo:'https://clawhub.ai/kesslerio/academic-deep-research', cli:'clawhub install kesslerio/academic-deep-research' },
+  { id:'steipete/summarize', desc:'Summarize any URL, document, or text blob with chunking for long content. Clean structured output — TL;DR, key points, action items. Works on PDFs, articles, transcripts.', tags:['research','productivity'], safety:'safe', badges:[], votes:49, installs:136000, verified:44, repo:'https://github.com/openclaw/openclaw/tree/main/skills/summarize', cli:'clawhub install steipete/summarize' },
+  { id:'steipete/weather', desc:'Weather data from OpenWeatherMap — current conditions, forecast, alerts. Use in scheduling agents, travel planners, or any workflow that needs real-world environmental context.', tags:['research'], safety:'safe', badges:[], votes:33, installs:84500, verified:29, repo:'https://github.com/openclaw/openclaw/tree/main/skills/weather', cli:'clawhub install steipete/weather' },
+  { id:'JimLiu/baoyu-url-to-markdown', desc:'Convert any URL to clean Markdown — strips noise, preserves structure. Feed web content directly into Obsidian or Notion without manual copy-paste.', tags:['research','productivity'], safety:'safe', badges:[], votes:38, installs:21, verified:33, repo:'https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-url-to-markdown', cli:'clawhub install JimLiu/baoyu-url-to-markdown' },
+  { id:'steipete/goplaces', desc:'Google Places API wrapper for location intelligence. Search businesses, get reviews, operating hours, coordinates. Research local markets, competition, or plan logistics automatically.', tags:['research'], safety:'safe', badges:[], votes:33, installs:13600, verified:29, repo:'https://github.com/openclaw/openclaw/tree/main/skills/goplaces', cli:'clawhub install steipete/goplaces' },
+  /* ── CONTENT ── */
+  { id:'steipete/nano-banana-pro', desc:'Image generation and editing with Nano Banana Pro (Gemini 3 Pro Image). Create and transform images with text instructions — text-to-image + image-to-image in 1K/2K/4K resolution.', tags:['content'], safety:'safe', badges:[{cls:'skill-start',label:'Start Here'}], votes:52, installs:45200, verified:45, repo:'https://github.com/openclaw/openclaw/tree/main/skills/nano-banana-pro', cli:'clawhub install steipete/nano-banana-pro' },
+  { id:'steipete/openai-image-gen', desc:'DALL·E 3 and GPT-image-1 via OpenAI API. High-fidelity image generation with prompt refinement. Requires OpenAI API key — best for creative or product imagery.', tags:['content'], safety:'safe', badges:[], votes:53, installs:14900, verified:47, repo:'https://github.com/openclaw/openclaw/tree/main/skills/openai-image-gen', cli:'clawhub install steipete/openai-image-gen' },
+  { id:'JimLiu/baoyu-infographic', desc:'Generate professional infographics from any text or data. Auto-layouts, icon selection, colour theming. Most versatile visual skill — output is shareable SVG or PNG.', tags:['content'], safety:'safe', badges:[{cls:'skill-rec',label:'🥇 Rec'}], votes:59, installs:123, verified:51, repo:'https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-infographic', cli:'clawhub install JimLiu/baoyu-infographic' },
+  { id:'JimLiu/baoyu-cover-image', desc:'Generate blog and article cover images with title, subtitle, and visual design. Handles Chinese typography. Output sized for Substack, WeChat, XHS — one command per platform.', tags:['content'], safety:'safe', badges:[], votes:47, installs:160, verified:42, repo:'https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-cover-image', cli:'clawhub install JimLiu/baoyu-cover-image' },
+  { id:'JimLiu/baoyu-xhs-images', desc:'小红书 (XHS) native image cards — correct aspect ratios, Chinese font handling, platform-optimised layouts. Drop in your text, get share-ready XHS post images in seconds.', tags:['content','social'], safety:'safe', badges:[], votes:41, installs:251, verified:36, repo:'https://github.com/JimLiu/baoyu-skills/tree/main/baoyu-xhs-images', cli:'clawhub install JimLiu/baoyu-xhs-images' },
+  { id:'ANVEAI/scribe', desc:'Long-form writing assistant — articles, reports, whitepapers. Takes a brief or outline and produces structured, citation-backed long-form content with consistent voice.', tags:['content'], safety:'safe', badges:[], votes:39, installs:129, verified:34, repo:'https://clawhub.ai/RuneweaverStudios/scribe', cli:'clawhub install RuneweaverStudios/scribe' },
+  { id:'steipete/sag', desc:'Screenshot-to-article generator. Point at any webpage screenshot — the agent reads it visually and produces a summarised article or comparison doc. No HTML access required.', tags:['content','research'], safety:'safe', badges:[], votes:36, installs:16100, verified:31, repo:'https://github.com/openclaw/openclaw/tree/main/skills/sag', cli:'clawhub install steipete/sag' },
+  /* ── DEV TOOLS ── */
+  { id:'steipete/github', desc:'Full GitHub API: PRs, issues, code review, dependency checks. Handles the full Repo Janitor workflow — triage, flag stale items, summarise diffs, monitor coverage.', tags:['dev-tools','automation'], safety:'safe', badges:[{cls:'skill-team',label:'👑 Team Grade'}], votes:71, installs:98400, verified:62, repo:'https://github.com/openclaw/openclaw/tree/main/skills/github', cli:'clawhub install steipete/github' },
+  { id:'steipete/gh-issues', desc:'Lightweight GitHub Issues-only skill — create, search, label, and close issues. Simpler than the full github skill. Perfect for bug triage and roadmap management workflows.', tags:['dev-tools'], safety:'safe', badges:[{cls:'skill-github',label:'⚠️ GitHub Only'}], votes:44, installs:33, verified:38, repo:'https://github.com/openclaw/openclaw/tree/main/skills/gh-issues', cli:'clawhub install steipete/gh-issues' },
+  { id:'TheSethRose/vercel', desc:'Deploy and manage Vercel projects from your agent — trigger deploys, check build status, manage domains and environment variables. CI/CD agent for frontend teams.', tags:['dev-tools','automation'], safety:'safe', badges:[], votes:48, installs:6900, verified:42, repo:'https://clawhub.ai/TheSethRose/vercel', cli:'clawhub install TheSethRose/vercel' },
+  { id:'steipete/coding-agent', desc:'Autonomous coding agent — reads files, writes code, runs tests, iterates on errors. Handles self-contained coding tasks end-to-end inside your local repo. Review output before committing.', tags:['dev-tools'], safety:'review', badges:[{cls:'skill-github',label:'⚠️ GitHub Only'}], votes:65, installs:49, verified:57, repo:'https://github.com/openclaw/openclaw/tree/main/skills/coding-agent', cli:'clawhub install steipete/coding-agent' },
+  { id:'steipete/skill-creator', desc:'Your agent writes and installs new OpenClaw skills on demand. Describe a capability you need — it scaffolds, writes, and registers the skill in your local environment automatically.', tags:['dev-tools'], safety:'safe', badges:[{cls:'skill-team',label:'👑 Team Grade'},{cls:'skill-github',label:'⚠️ GitHub Only'}], votes:72, installs:53, verified:62, repo:'https://github.com/openclaw/openclaw/tree/main/skills/skill-creator', cli:'clawhub install steipete/skill-creator' },
+];
+
+const TAG_LABELS = {
+  intelligence:'🧠 Intelligence', social:'📡 Social', finance:'📈 Finance', productivity:'⚡ Productivity',
+  monitoring:'👁 Monitoring', news:'📰 News', inbox:'📬 Inbox',
+  automation:'🤖 Automation', research:'🔬 Research', content:'🎨 Content', 'dev-tools':'🛠 Dev Tools'
+};
+const MAIN_TAGS = ['intelligence','social','finance','productivity','automation','research','content','dev-tools'];
+
+let _filter = 'all', _sort = 'hot', _search = '';
+
+function setFilter(tag) {
+  _filter = tag;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.toggle('active', t.dataset.tag === tag));
+  renderBrowse();
+}
+
+function setSort(val) { _sort = val; renderBrowse(); }
+function onSearch(val) { _search = val.toLowerCase().trim(); renderBrowse(); }
+
+function renderBrowse() {
+  let list = SKILLS.filter(s => {
+    const matchTag = _filter === 'all' || s.tags.includes(_filter);
+    const matchSearch = !_search || s.id.toLowerCase().includes(_search) || s.desc.toLowerCase().includes(_search) || s.tags.some(t => t.includes(_search));
+    return matchTag && matchSearch;
+  });
+
+  if (_sort === 'hot') list.sort((a,b) => b.installs - a.installs);
+  else if (_sort === 'rated') list.sort((a,b) => b.verified - a.verified);
+  else list.sort((a,b) => a.id.localeCompare(b.id));
+
+  // Update tab counts
+  MAIN_TAGS.forEach(tag => {
+    const el = document.getElementById('cnt-' + tag.replace('-','-'));
+    if (el) el.textContent = SKILLS.filter(s => s.tags.includes(tag) && (!_search || s.id.toLowerCase().includes(_search) || s.desc.toLowerCase().includes(_search) || s.tags.some(t => t.includes(_search)))).length;
+  });
+  const allEl = document.getElementById('cnt-all');
+  if (allEl) allEl.textContent = SKILLS.filter(s => !_search || s.id.toLowerCase().includes(_search) || s.desc.toLowerCase().includes(_search) || s.tags.some(t => t.includes(_search))).length;
+
+  const countEl = document.getElementById('resultCount');
+  if (countEl) countEl.textContent = 'Showing ' + list.length + ' of ' + SKILLS.length + ' skills';
+
+  const grid = document.getElementById('browseGrid');
+  if (!grid) return;
+  if (list.length === 0) { grid.innerHTML = '<div class="browse-empty">No skills match your search.</div>'; return; }
+
+  grid.innerHTML = list.map(s => {
+    const safetyBadge = s.safety === 'safe'
+      ? '<span class="skill-badge skill-safe">🟢 Safe</span>'
+      : '<span class="skill-badge skill-review">🟡 Review</span>';
+    const extraBadges = s.badges.map(b => '<span class="skill-badge ' + b.cls + '">' + b.label + '</span>').join('');
+    const tagPills = s.tags.map(t => '<span class="tag-pill tag-' + t + '">' + (TAG_LABELS[t] || t) + '</span>').join('');
+    return '<div class="bsc">' +
+      '<div class="bsc-top"><div class="bsc-name">' + s.id + '</div>' +
+      '<div class="bsc-badges">' + safetyBadge + extraBadges + '</div></div>' +
+      '<div class="bsc-desc">' + s.desc + '</div>' +
+      '<div class="bsc-bottom"><div class="bsc-left">' +
+      '<div class="bsc-tags">' + tagPills + '</div>' +
+      '<div class="bsc-votes"><span>👍 ' + s.votes + '</span><span>📦 ' + s.installs + '</span><span style="color:var(--green)">✅ ' + s.verified + '</span></div>' +
+      '</div><button class="bsc-install-btn" onclick="openModal(\'' + s.id + '\',\'' + s.repo + '\',\'' + s.cli + '\')">📦 Install</button></div>' +
+      '</div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', renderBrowse);
+
+/* ── MODAL ── */
+function openModal(name, repo, cli) {
+  document.getElementById('modalSkillName').textContent = name;
+  document.getElementById('nlCode').textContent = 'Install this skill: ' + repo;
+  document.getElementById('cliCode').textContent = cli;
+  document.getElementById('installModal').classList.add('active');
+}
+function closeModal() { document.getElementById('installModal').classList.remove('active'); }
+function closeModalOutside(e) { if(e.target===document.getElementById('installModal')) closeModal(); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+function copyCode(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

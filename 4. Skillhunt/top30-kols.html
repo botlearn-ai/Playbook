@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 30 AI Agent Ecosystem Builders — SkillHunt by BotLearn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg2: #f7f8f7;
+  --surface: #f3f5f4;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.16);
+  --text: #111827;
+  --text2: #4b5563;
+  --text3: #6b7280;
+  --accent: #ff4f40;
+  --l1: #d97706;   /* amber  — Layer 1 Strategic */
+  --l2: #7c3aed;   /* purple — Layer 2 Technical */
+  --l3: #2563eb;   /* blue   — Layer 3 Ecosystem */
+  --l4: #16a34a;   /* green  — Layer 4 Practice  */
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,0,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.04) 1px,transparent 1px); background-size:48px 48px; pointer-events:none; z-index:0; }
+
+/* NAV */
+nav { position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.92); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0 32px; display:flex; align-items:center; justify-content:space-between; height:56px; }
+.nav-logo { font-family:'Inter',sans-serif; font-weight:800; font-size:17px; letter-spacing:-0.5px; display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--text); }
+.nav-logo .accent { color:var(--accent); }
+.nav-logo .tag { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); letter-spacing:1px; padding:2px 6px; border:1px solid var(--border2); border-radius:3px; }
+.nav-right { display:flex; gap:12px; align-items:center; }
+.nav-back { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text2); text-decoration:none; display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border2); border-radius:4px; transition:all .2s; }
+.nav-back:hover { color:var(--accent); border-color:var(--accent); }
+.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--accent); color:#fff; padding:7px 14px; border-radius:4px; text-decoration:none; font-weight:700; letter-spacing:.5px; transition:opacity .2s; }
+.nav-cta:hover { opacity:.85; }
+
+/* HERO */
+.hero { position:relative; z-index:1; padding:72px 32px 48px; max-width:1200px; margin:0 auto; }
+.hero-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--accent); text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:8px; }
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--accent); }
+.hero h1 { font-weight:800; font-size:clamp(32px,5vw,56px); line-height:1.05; letter-spacing:-2px; margin-bottom:18px; max-width:700px; }
+.hero h1 em { font-style:normal; color:var(--accent); }
+.hero-sub { font-size:15px; color:var(--text2); max-width:580px; line-height:1.7; font-weight:300; margin-bottom:32px; }
+.hero-stats { display:flex; gap:36px; flex-wrap:wrap; }
+.hstat { display:flex; flex-direction:column; gap:2px; }
+.hstat-num { font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; letter-spacing:-1px; }
+.hstat-label { font-size:11px; color:var(--text3); letter-spacing:.5px; }
+
+/* SELECTION NARRATIVE */
+.narrative { position:relative; z-index:1; background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:36px 32px; }
+.narrative-inner { max-width:1200px; margin:0 auto; display:flex; gap:48px; align-items:flex-start; flex-wrap:wrap; }
+.narrative-text { flex:1; min-width:300px; }
+.narrative-text h2 { font-weight:800; font-size:18px; letter-spacing:-0.5px; margin-bottom:10px; }
+.narrative-text p { font-size:13px; color:var(--text2); line-height:1.7; }
+.narrative-flow { display:flex; gap:0; align-items:center; flex-wrap:wrap; }
+.nf-step { display:flex; flex-direction:column; align-items:center; text-align:center; min-width:120px; }
+.nf-circle { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; color:#fff; margin-bottom:8px; }
+.nf-circle.c-all { background:var(--text); }
+.nf-circle.c-pick { background:var(--accent); }
+.nf-label { font-size:11px; color:var(--text2); font-weight:500; }
+.nf-sub { font-size:10px; color:var(--text3); margin-top:2px; }
+.nf-arrow { font-size:20px; color:var(--text3); padding:0 8px; padding-bottom:24px; }
+
+/* LAYER SECTIONS */
+.layers-wrap { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:48px 32px 24px; }
+
+.layer-section { margin-bottom:48px; }
+.layer-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:14px; border-bottom:2px solid; }
+.layer-header.l1 { border-color:var(--l1); }
+.layer-header.l2 { border-color:var(--l2); }
+.layer-header.l3 { border-color:var(--l3); }
+.layer-header.l4 { border-color:var(--l4); }
+.layer-badge { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 10px; border-radius:3px; white-space:nowrap; }
+.lb-l1 { background:rgba(217,119,6,.1); color:var(--l1); border:1px solid rgba(217,119,6,.25); }
+.lb-l2 { background:rgba(124,58,237,.1); color:var(--l2); border:1px solid rgba(124,58,237,.25); }
+.lb-l3 { background:rgba(37,99,235,.1); color:var(--l3); border:1px solid rgba(37,99,235,.25); }
+.lb-l4 { background:rgba(22,163,74,.1); color:var(--l4); border:1px solid rgba(22,163,74,.25); }
+.layer-title { font-weight:800; font-size:16px; letter-spacing:-0.3px; }
+.layer-desc { font-size:12px; color:var(--text3); margin-left:auto; max-width:340px; text-align:right; line-height:1.4; }
+
+.person-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+
+/* PERSON CARD */
+.pcard { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:14px; position:relative; transition:border-color .2s, box-shadow .2s; }
+.pcard:hover { border-color:var(--border2); box-shadow:0 3px 16px rgba(0,0,0,.06); }
+.pcard.is-pick { border-color:rgba(255,79,64,.25); background:rgba(255,79,64,.02); }
+.pcard.is-pick:hover { border-color:rgba(255,79,64,.5); box-shadow:0 3px 16px rgba(255,79,64,.08); }
+
+.pc-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.pc-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12px; color:#fff; flex-shrink:0; }
+/* Layer avatar colors */
+.ava-l1 { background:linear-gradient(135deg,#d97706,#f59e0b); }
+.ava-l2 { background:linear-gradient(135deg,#7c3aed,#a78bfa); }
+.ava-l3 { background:linear-gradient(135deg,#2563eb,#60a5fa); }
+.ava-l4 { background:linear-gradient(135deg,#16a34a,#4ade80); }
+/* SkillHunt picks get accent avatar */
+.ava-pick { background:linear-gradient(135deg,#ff4f40,#ff7b63); }
+
+.pc-meta { flex:1; min-width:0; }
+.pc-name { font-weight:700; font-size:12px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pc-handle { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
+.pc-followers { font-size:10px; color:var(--text3); margin-top:1px; }
+
+.pc-role { font-size:11px; color:var(--text2); font-weight:500; margin-bottom:6px; line-height:1.3; }
+.pc-focus { font-size:11px; color:var(--text3); line-height:1.45; }
+
+.pc-pick-badge { display:inline-flex; align-items:center; gap:4px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.5px; padding:3px 7px; border-radius:3px; background:rgba(255,79,64,.1); color:var(--accent); border:1px solid rgba(255,79,64,.25); margin-top:8px; }
+
+/* FEATURED 5 CALLOUT */
+.featured-callout { position:relative; z-index:1; background:var(--bg); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.fc-inner { max-width:1200px; margin:0 auto; padding:48px 32px; }
+.fc-eyebrow { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+.fc-title { font-weight:800; font-size:clamp(20px,2.5vw,28px); letter-spacing:-0.8px; margin-bottom:10px; }
+.fc-sub { font-size:14px; color:var(--text2); max-width:560px; line-height:1.6; margin-bottom:28px; }
+.fc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+
+.fc-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; border-left:3px solid var(--accent); }
+.fc-rank { font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:1px; color:var(--accent); text-transform:uppercase; margin-bottom:10px; }
+.fc-avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:#fff; margin-bottom:8px; }
+.fc-name { font-weight:700; font-size:13px; margin-bottom:2px; }
+.fc-handle { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); margin-bottom:6px; }
+.fc-why { font-size:11px; color:var(--text2); line-height:1.5; }
+.fc-layer { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:700; letter-spacing:.5px; padding:2px 6px; border-radius:2px; margin-top:8px; }
+
+/* FOOTER CTA */
+.footer-cta { position:relative; z-index:1; background:var(--surface); border-top:1px solid var(--border); padding:48px 32px; text-align:center; }
+.footer-cta h2 { font-weight:800; font-size:22px; letter-spacing:-0.5px; margin-bottom:10px; }
+.footer-cta p { font-size:14px; color:var(--text2); margin-bottom:24px; }
+.btn-primary { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; letter-spacing:.5px; background:var(--accent); color:#fff; padding:12px 24px; border-radius:5px; text-decoration:none; transition:opacity .2s; }
+.btn-primary:hover { opacity:.85; }
+.btn-secondary { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; letter-spacing:.5px; color:var(--text2); border:1px solid var(--border2); padding:12px 24px; border-radius:5px; text-decoration:none; transition:all .2s; margin-left:12px; }
+.btn-secondary:hover { color:var(--text); border-color:var(--text); }
+
+page-footer { position:relative; z-index:1; border-top:1px solid var(--border); padding:20px 32px; max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+
+@media(max-width:640px){
+  .narrative-inner { flex-direction:column; gap:24px; }
+  .layer-desc { display:none; }
+  .person-grid { grid-template-columns:1fr 1fr; }
+  .fc-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="skillhunt.html" class="nav-logo"><span class="accent">Skill</span>Hunt <span class="tag">BETA</span></a>
+  <div class="nav-right">
+    <a href="skillhunt.html" class="nav-back">← Back to SkillHunt</a>
+    <a href="skillhunt.html#module3" class="nav-cta">Browse 48 Skills</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">SkillHunt · Expert Curation</div>
+  <h1>Top 30 Voices in the<br><em>AI Agent Ecosystem</em></h1>
+  <p class="hero-sub">From LLM platform founders to grassroots educators — we mapped 30 of the most influential figures across the entire AI agent stack. 5 of them publish skill lists that meet SkillHunt's quality bar.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="hstat-num" style="color:var(--l1);">4</span><span class="hstat-label">Stack Layers</span></div>
+    <div class="hstat"><span class="hstat-num">30</span><span class="hstat-label">Key Figures</span></div>
+    <div class="hstat"><span class="hstat-num" style="color:var(--accent);">5</span><span class="hstat-label">SkillHunt Picks</span></div>
+    <div class="hstat"><span class="hstat-num">2.3M+</span><span class="hstat-label">Combined Reach</span></div>
+  </div>
+</div>
+
+<!-- SELECTION NARRATIVE -->
+<div class="narrative">
+  <div class="narrative-inner">
+    <div class="narrative-text">
+      <h2>How SkillHunt's Top 5 Were Selected</h2>
+      <p>We started from the full AI agent ecosystem — 30 figures spanning strategic vision, technical architecture, developer tooling, and community education. From this pool, we filtered for one criterion: <strong>who has actually published or curated a skill list</strong> that meets BotLearn's quality standard for install volume, maintenance, and community trust? Five passed. Those are the SkillHunt picks.</p>
+    </div>
+    <div class="narrative-flow">
+      <div class="nf-step">
+        <div class="nf-circle c-all">30</div>
+        <div class="nf-label">Ecosystem</div>
+        <div class="nf-sub">Mapped across<br>4 layers</div>
+      </div>
+      <div class="nf-arrow">→</div>
+      <div class="nf-step">
+        <div class="nf-circle" style="background:var(--l3);">12</div>
+        <div class="nf-label">Skill Authors</div>
+        <div class="nf-sub">Published skills<br>or curated lists</div>
+      </div>
+      <div class="nf-arrow">→</div>
+      <div class="nf-step">
+        <div class="nf-circle c-pick">5</div>
+        <div class="nf-label">SkillHunt Picks</div>
+        <div class="nf-sub">Quality, installs<br>&amp; maintenance ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYERS -->
+<div class="layers-wrap">
+
+  <!-- ═══ LAYER 1 ═══ -->
+  <div class="layer-section">
+    <div class="layer-header l1">
+      <span class="layer-badge lb-l1">Layer 1</span>
+      <span class="layer-title">Strategic Vision — LLM Platform Leaders</span>
+      <span class="layer-desc">CEOs and founders of the LLM platforms that the entire agent ecosystem is built on top of</span>
+    </div>
+    <div class="person-grid">
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">SA</div>
+          <div class="pc-meta">
+            <div class="pc-name">Sam Altman</div>
+            <div class="pc-handle">@sama</div>
+            <div class="pc-followers">2.5M followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, OpenAI</div>
+        <div class="pc-focus">Sets the pace for the entire LLM industry. GPT-4o, o1, Sora — every release shapes what agent skills can do.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">DA</div>
+          <div class="pc-meta">
+            <div class="pc-name">Dario Amodei</div>
+            <div class="pc-handle">@DarioAmodei</div>
+            <div class="pc-followers">220K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, Anthropic</div>
+        <div class="pc-focus">Claude's architect. Anthropic's constitutional AI principles define the safety bar that skill authors target.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">DH</div>
+          <div class="pc-meta">
+            <div class="pc-name">Demis Hassabis</div>
+            <div class="pc-handle">@demishassabis</div>
+            <div class="pc-followers">380K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, Google DeepMind</div>
+        <div class="pc-focus">Gemini and DeepMind research power the multi-modal skills increasingly appearing in agent stacks.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">JH</div>
+          <div class="pc-meta">
+            <div class="pc-name">Jensen Huang</div>
+            <div class="pc-handle">@jensenhuang</div>
+            <div class="pc-followers">850K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, NVIDIA</div>
+        <div class="pc-focus">The GPU infrastructure layer — every agent inference that skills rely on runs on NVIDIA hardware.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">SN</div>
+          <div class="pc-meta">
+            <div class="pc-name">Satya Nadella</div>
+            <div class="pc-handle">@satyanadella</div>
+            <div class="pc-followers">3.2M followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, Microsoft</div>
+        <div class="pc-focus">Azure + Copilot + OpenAI partnership: the enterprise deployment layer for agentic applications at scale.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l1">GB</div>
+          <div class="pc-meta">
+            <div class="pc-name">Greg Brockman</div>
+            <div class="pc-handle">@gdb</div>
+            <div class="pc-followers">420K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Co-founder, OpenAI</div>
+        <div class="pc-focus">Original builder of the API infrastructure that hundreds of thousands of skills are built on top of.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ LAYER 2 ═══ -->
+  <div class="layer-section">
+    <div class="layer-header l2">
+      <span class="layer-badge lb-l2">Layer 2</span>
+      <span class="layer-title">Technical Standards — Agent Runtime + Skill Architecture</span>
+      <span class="layer-desc">Builders defining how agents are structured, how skills are composed, and how runtimes execute them</span>
+    </div>
+    <div class="person-grid">
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l2">AK</div>
+          <div class="pc-meta">
+            <div class="pc-name">Andrej Karpathy</div>
+            <div class="pc-handle">@karpathy</div>
+            <div class="pc-followers">800K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">ex-OpenAI / Tesla AI</div>
+        <div class="pc-focus">Defines how engineers think about model-native tool use. His "Software 2.0" framing underpins skill design patterns.</div>
+      </div>
+
+      <div class="pcard is-pick">
+        <div class="pc-top">
+          <div class="pc-avatar ava-pick">PS</div>
+          <div class="pc-meta">
+            <div class="pc-name">Peter Steinberger</div>
+            <div class="pc-handle">@steipete</div>
+            <div class="pc-followers">429K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, OpenClaw</div>
+        <div class="pc-focus">Built the OpenClaw runtime and wrote 52 first-party skills. The most trusted skill author in the ecosystem.</div>
+        <div class="pc-pick-badge">✦ SKILLHUNT PICK #2</div>
+      </div>
+
+      <div class="pcard is-pick">
+        <div class="pc-top">
+          <div class="pc-avatar ava-pick">YN</div>
+          <div class="pc-meta">
+            <div class="pc-name">Yohei Nakajima</div>
+            <div class="pc-handle">@yoheinakajima</div>
+            <div class="pc-followers">45K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, BabyAGI</div>
+        <div class="pc-focus">Pioneered composable autonomous agent loops. His modular skill architecture is the blueprint for self-evolving agents.</div>
+        <div class="pc-pick-badge">✦ SKILLHUNT PICK #4</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l2">HC</div>
+          <div class="pc-meta">
+            <div class="pc-name">Harrison Chase</div>
+            <div class="pc-handle">@hwchase17</div>
+            <div class="pc-followers">98K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, LangChain</div>
+        <div class="pc-focus">LangChain and LangSmith define the dominant agent orchestration standard that most skill authors build against.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l2">JL</div>
+          <div class="pc-meta">
+            <div class="pc-name">Jerry Liu</div>
+            <div class="pc-handle">@jerryjliu0</div>
+            <div class="pc-followers">92K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, LlamaIndex</div>
+        <div class="pc-focus">LlamaIndex defines the retrieval and data layer that knowledge-intensive skills depend on for accurate context.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l2">AM</div>
+          <div class="pc-meta">
+            <div class="pc-name">Amjad Masad</div>
+            <div class="pc-handle">@amasad</div>
+            <div class="pc-followers">195K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CEO, Replit</div>
+        <div class="pc-focus">Replit Agent makes code execution and deployment skills accessible to millions of non-expert developers.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l2">GH</div>
+          <div class="pc-meta">
+            <div class="pc-name">George Hotz</div>
+            <div class="pc-handle">@realGeorgeHotz</div>
+            <div class="pc-followers">280K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, tinygrad</div>
+        <div class="pc-focus">Pushes the boundaries of lightweight, open-source inference runtimes — the edge-case layer that agent skills will eventually run on.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ LAYER 3 ═══ -->
+  <div class="layer-section">
+    <div class="layer-header l3">
+      <span class="layer-badge lb-l3">Layer 3</span>
+      <span class="layer-title">Developer Ecosystem — Tool/Skill Integration + Automation</span>
+      <span class="layer-desc">Builders who ship the integrations, frameworks, and platforms that skill authors plug into daily</span>
+    </div>
+    <div class="person-grid">
+
+      <div class="pcard is-pick">
+        <div class="pc-top">
+          <div class="pc-avatar ava-pick">SV</div>
+          <div class="pc-meta">
+            <div class="pc-name">Santiago Valdarrama</div>
+            <div class="pc-handle">@svpino</div>
+            <div class="pc-followers">447K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Co-founder, Composio</div>
+        <div class="pc-focus">ML educator and Composio co-founder. His opinionated Top 10 skill list is stress-tested in real production deployments.</div>
+        <div class="pc-pick-badge">✦ SKILLHUNT PICK #1</div>
+      </div>
+
+      <div class="pcard is-pick">
+        <div class="pc-top">
+          <div class="pc-avatar ava-pick">VA</div>
+          <div class="pc-meta">
+            <div class="pc-name">VoltAgent Team</div>
+            <div class="pc-handle">awesome-openclaw</div>
+            <div class="pc-followers">36k ⭐ on GitHub</div>
+          </div>
+        </div>
+        <div class="pc-role">Community Index Maintainers</div>
+        <div class="pc-focus">The most comprehensive OpenClaw index — 6,000+ skills, star-sorted, 950K monthly views. The ecosystem's canonical discovery layer.</div>
+        <div class="pc-pick-badge">✦ SKILLHUNT PICK #5</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">SW</div>
+          <div class="pc-meta">
+            <div class="pc-name">swyx</div>
+            <div class="pc-handle">@swyx</div>
+            <div class="pc-followers">100K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">AI Engineer Newsletter</div>
+        <div class="pc-focus">Defines the "AI Engineer" role. His ecosystem mapping and skill design patterns shape what the builder community ships.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">SW</div>
+          <div class="pc-meta">
+            <div class="pc-name">Simon Willison</div>
+            <div class="pc-handle">@simonw</div>
+            <div class="pc-followers">245K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Creator, Datasette + LLM CLI</div>
+        <div class="pc-focus">Ships practical LLM dev tools and documents them exhaustively. His work informs the CLI-first skill philosophy.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">RG</div>
+          <div class="pc-meta">
+            <div class="pc-name">Riley Goodside</div>
+            <div class="pc-handle">@goodside</div>
+            <div class="pc-followers">85K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Staff Prompt Engineer, Scale AI</div>
+        <div class="pc-focus">The field's most cited prompt engineer. His techniques directly improve how skill prompts are structured for reliability.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">GK</div>
+          <div class="pc-meta">
+            <div class="pc-name">Greg Kamradt</div>
+            <div class="pc-handle">@GregKamradt</div>
+            <div class="pc-followers">128K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">LLM Application Educator</div>
+        <div class="pc-focus">Teaches LLM application engineering in depth. His tutorials directly explain how to build and test production-grade skills.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">LK</div>
+          <div class="pc-meta">
+            <div class="pc-name">Logan Kilpatrick</div>
+            <div class="pc-handle">@OfficialLoganK</div>
+            <div class="pc-followers">58K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Developer Relations, Google AI</div>
+        <div class="pc-focus">Bridges LLM API capability announcements to the developer community — first to surface features that skill builders need.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">BT</div>
+          <div class="pc-meta">
+            <div class="pc-name">Ben Tossell</div>
+            <div class="pc-handle">@bentossell</div>
+            <div class="pc-followers">95K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Founder, Makerpad (no-code AI)</div>
+        <div class="pc-focus">Expands skill adoption to non-engineers. His no-code integrations make agent automation accessible to a far wider audience.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l3">JB</div>
+          <div class="pc-meta">
+            <div class="pc-name">James Briggs</div>
+            <div class="pc-handle">@jamescalam</div>
+            <div class="pc-followers">65K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">AI Engineer, Pinecone</div>
+        <div class="pc-focus">Vector search and retrieval content — the backbone of memory-intensive skills that agents use to maintain long-term context.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ LAYER 4 ═══ -->
+  <div class="layer-section">
+    <div class="layer-header l4">
+      <span class="layer-badge lb-l4">Layer 4</span>
+      <span class="layer-title">Practice Application — Developer Community + Education</span>
+      <span class="layer-desc">Educators and community leaders who translate AI research into workflows that everyday builders can act on</span>
+    </div>
+    <div class="person-grid">
+
+      <div class="pcard is-pick">
+        <div class="pc-top">
+          <div class="pc-avatar ava-pick">宝</div>
+          <div class="pc-meta">
+            <div class="pc-name">宝玉 JimLiu</div>
+            <div class="pc-handle">@dotey</div>
+            <div class="pc-followers">200K+ followers</div>
+          </div>
+        </div>
+        <div class="pc-role">CN AI Educator + Translator</div>
+        <div class="pc-focus">Bridges Western AI tools to Chinese workflows. 8 baoyu skills for XHS, WeChat, and X creators — the most widely used CN agent skill set.</div>
+        <div class="pc-pick-badge">✦ SKILLHUNT PICK #3</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">AN</div>
+          <div class="pc-meta">
+            <div class="pc-name">Andrew Ng</div>
+            <div class="pc-handle">@AndrewYNg</div>
+            <div class="pc-followers">1.2M followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Founder, DeepLearning.AI</div>
+        <div class="pc-focus">Trained millions of AI engineers. His agentic AI course frameworks directly shape how new developers approach skill building.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">EM</div>
+          <div class="pc-meta">
+            <div class="pc-name">Ethan Mollick</div>
+            <div class="pc-handle">@emollick</div>
+            <div class="pc-followers">360K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Professor, Wharton School</div>
+        <div class="pc-focus">Most influential academic voice on AI-in-practice. His research on human-agent collaboration validates which skill types deliver real value.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">JH</div>
+          <div class="pc-meta">
+            <div class="pc-name">Jeremy Howard</div>
+            <div class="pc-handle">@jeremyphoward</div>
+            <div class="pc-followers">380K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Co-founder, fast.ai</div>
+        <div class="pc-focus">Made deep learning practical for hundreds of thousands of developers. His "top-down" teaching style carries into skill documentation norms.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">LW</div>
+          <div class="pc-meta">
+            <div class="pc-name">Lilian Weng</div>
+            <div class="pc-handle">@lilianweng</div>
+            <div class="pc-followers">320K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Head of Safety, ex-OpenAI</div>
+        <div class="pc-focus">Author of the most-cited agent and tool-use research blog posts. Her work defines the theoretical foundation that skill safety reviews draw from.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">ES</div>
+          <div class="pc-meta">
+            <div class="pc-name">Elvis Saravia</div>
+            <div class="pc-handle">@omarsar0</div>
+            <div class="pc-followers">70K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Founder, DAIR.AI</div>
+        <div class="pc-focus">Democratizes AI research. His prompt engineering guide and NLP resources are standard references for skill authors writing effective tool descriptions.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">JF</div>
+          <div class="pc-meta">
+            <div class="pc-name">Dr. Jim Fan</div>
+            <div class="pc-handle">@DrJimFan</div>
+            <div class="pc-followers">95K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Senior Research Scientist, NVIDIA</div>
+        <div class="pc-focus">Embodied AI and multi-agent research at NVIDIA. His work on agent-to-agent skill calling is what the next generation of skill specs will be built on.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">AA</div>
+          <div class="pc-meta">
+            <div class="pc-name">Alex Albert</div>
+            <div class="pc-handle">@alexalbert__</div>
+            <div class="pc-followers">38K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Head of Developer Relations, Anthropic</div>
+        <div class="pc-focus">Translates Claude's capabilities into actionable developer patterns. His skill examples and prompt templates are widely adopted in the OpenClaw community.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="pc-top">
+          <div class="pc-avatar ava-l4">ZK</div>
+          <div class="pc-meta">
+            <div class="pc-name">Zain Kahn</div>
+            <div class="pc-handle">@heyzainhere</div>
+            <div class="pc-followers">350K followers</div>
+          </div>
+        </div>
+        <div class="pc-role">Founder, Superhuman Newsletter</div>
+        <div class="pc-focus">Reaches 700K+ readers with weekly AI tool breakdowns. His skill spotlights drive more organic installs than any other newsletter in the space.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end layers-wrap -->
+
+<!-- FOOTER CTA -->
+<div class="footer-cta">
+  <h2>See the 5 lists in action</h2>
+  <p>Browse all 48 curated skills — filtered by scenario, ranked by real install counts.</p>
+  <a href="skillhunt.html#module3" class="btn-primary">Browse 48 Skills →</a>
+  <a href="skillhunt.html#module1" class="btn-secondary">View Top 5 Builders</a>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:20px 32px;max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1;">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);">SkillHunt by <a href="https://www.botlearn.ai" style="color:var(--accent);text-decoration:none;">BotLearn.ai</a> — Updated March 2026</div>
+  <div style="font-size:12px;color:var(--text3);">Selection criteria: published skill list · install volume · active maintenance · community safety score</div>
+</footer>
+
+</body>
+</html>
